@@ -1,0 +1,3827 @@
+Terminals unused in grammar
+
+    LETFCURLYBRACKET
+    RIGHTCURLYBRACKET
+    BOOL
+    UNDEFINED
+
+
+State 129 conflicts: 9 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: stmtlist
+
+    2 stmtlist: ε
+    3         | stmtlist stmt
+    4         | stmtlist error
+
+    5 stmt: SEMICOLON
+    6     | asgn SEMICOLON
+    7     | print SEMICOLON
+    8     | read SEMICOLON
+    9     | if
+   10     | while
+   11     | for_stmt
+   12     | repeat
+   13     | do_while
+   14     | clear_screen
+   15     | place
+   16     | switch_stmt
+
+   17 controlSymbol: ε
+
+   18 if: IF controlSymbol exp THEN stmtlist END_IF
+   19   | IF controlSymbol exp THEN stmtlist ELSE stmtlist END_IF
+
+   20 while: WHILE controlSymbol exp DO stmtlist END_WHILE
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE FROM exp TO exp STEP exp DO stmtlist END_FOR
+
+   23 repeat: REPEAT controlSymbol stmtlist UNTIL exp SEMICOLON
+
+   24 do_while: DO controlSymbol stmtlist WHILE exp SEMICOLON
+
+   25 clear_screen: CLEAR_SCREEN SEMICOLON
+
+   26 place: PLACE LPAREN exp COMMA exp RPAREN SEMICOLON
+
+   27 switch_stmt: SWITCH LPAREN exp RPAREN case_list END_SWITCH
+   28            | SWITCH LPAREN exp RPAREN case_list DEFAULT stmtlist END_SWITCH
+
+   29 case_list: case_list CASE exp stmtlist
+   30          | CASE exp stmtlist
+
+   31 asgn: VARIABLE ASSIGNMENT exp
+   32     | VARIABLE ASSIGNMENT asgn
+   33     | INCREMENTO VARIABLE
+   34     | DECREMENTO VARIABLE
+   35     | VARIABLE INCREMENTO
+   36     | VARIABLE DECREMENTO
+   37     | VARIABLE MAS_IGUAL exp
+   38     | VARIABLE MENOS_IGUAL exp
+   39     | CONSTANT ASSIGNMENT exp
+   40     | CONSTANT ASSIGNMENT asgn
+
+   41 print: PRINT exp
+
+   42 read: READ LPAREN VARIABLE RPAREN
+   43     | READ LPAREN CONSTANT RPAREN
+   44     | READ_STRING LPAREN VARIABLE RPAREN
+
+   45 exp: NUMBER
+   46    | STRING
+   47    | exp PLUS exp
+   48    | exp MINUS exp
+   49    | exp MULTIPLICATION exp
+   50    | exp DIVISION exp
+   51    | exp DIV_ENTERA exp
+   52    | LPAREN exp RPAREN
+   53    | PLUS exp
+   54    | MINUS exp
+   55    | exp MODULO exp
+   56    | exp POWER exp
+   57    | VARIABLE
+   58    | CONSTANT
+   59    | BUILTIN LPAREN listOfExp RPAREN
+   60    | exp GREATER_THAN exp
+   61    | exp GREATER_OR_EQUAL exp
+   62    | exp LESS_THAN exp
+   63    | exp LESS_OR_EQUAL exp
+   64    | exp EQUAL exp
+   65    | exp NOT_EQUAL exp
+   66    | exp AND exp
+   67    | exp OR exp
+   68    | NOT exp
+   69    | exp CONCAT exp
+   70    | exp '?' exp ':' exp
+
+   71 listOfExp: ε
+   72          | exp restOfListOfExp
+
+   73 restOfListOfExp: ε
+   74                | COMMA exp restOfListOfExp
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    ':' (58) 70
+    '?' (63) 70
+    error (256) 4
+    SEMICOLON (258) 5 6 7 8 23 24 25 26
+    COMMA (259) 26 74
+    LPAREN (260) 26 27 28 42 43 44 52 59
+    RPAREN (261) 26 27 28 42 43 44 52 59
+    PLUS (262) 47 53
+    MINUS (263) 48 54
+    MULTIPLICATION (264) 49
+    DIVISION (265) 50
+    GREATER_THAN (266) 60
+    LESS_THAN (267) 62
+    GREATER_OR_EQUAL (268) 61
+    LESS_OR_EQUAL (269) 63
+    PRINT (270) 41
+    READ (271) 42 43
+    READ_STRING (272) 44
+    IF (273) 18 19
+    THEN (274) 18 19
+    ELSE (275) 19
+    END_IF (276) 18 19
+    WHILE (277) 20 24
+    DO (278) 20 21 22 24
+    END_WHILE (279) 20
+    REPEAT (280) 23
+    UNTIL (281) 23
+    FOR (282) 21 22
+    END_FOR (283) 21 22
+    FROM (284) 21 22
+    STEP (285) 22
+    TO (286) 21 22
+    SWITCH (287) 27 28
+    CASE (288) 29 30
+    DEFAULT (289) 28
+    END_SWITCH (290) 27 28
+    CLEAR_SCREEN (291) 25
+    PLACE (292) 26
+    OR (293) 67
+    AND (294) 66
+    NOT (295) 68
+    LETFCURLYBRACKET (296)
+    RIGHTCURLYBRACKET (297)
+    DIV_ENTERA (298) 51
+    CONCAT (299) 69
+    EQUAL (300) 64
+    NOT_EQUAL (301) 65
+    MODULO (302) 55
+    ASSIGNMENT (303) 31 32 39 40
+    MAS_IGUAL (304) 37
+    MENOS_IGUAL (305) 38
+    INCREMENTO (306) 33 35
+    DECREMENTO (307) 34 36
+    STRING <string> (308) 46
+    NUMBER <number> (309) 45
+    BOOL <logic> (310)
+    VARIABLE <string> (311) 21 22 31 32 33 34 35 36 37 38 42 44 57
+    UNDEFINED <string> (312)
+    CONSTANT <string> (313) 39 40 43 58
+    BUILTIN <string> (314) 59
+    UNARY (315)
+    POWER (316) 56
+
+
+Nonterminals, with rules where they appear
+
+    $accept (64)
+        on left: 0
+    program <prog> (65)
+        on left: 1
+        on right: 0
+    stmtlist <stmts> (66)
+        on left: 2 3 4
+        on right: 1 3 4 18 19 20 21 22 23 24 28 29 30
+    stmt <st> (67)
+        on left: 5 6 7 8 9 10 11 12 13 14 15 16
+        on right: 3
+    controlSymbol (68)
+        on left: 17
+        on right: 18 19 20 21 22 23 24
+    if <st> (69)
+        on left: 18 19
+        on right: 9
+    while <st> (70)
+        on left: 20
+        on right: 10
+    for_stmt <st> (71)
+        on left: 21 22
+        on right: 11
+    repeat <st> (72)
+        on left: 23
+        on right: 12
+    do_while <st> (73)
+        on left: 24
+        on right: 13
+    clear_screen <st> (74)
+        on left: 25
+        on right: 14
+    place <st> (75)
+        on left: 26
+        on right: 15
+    switch_stmt <st> (76)
+        on left: 27 28
+        on right: 16
+    case_list <st> (77)
+        on left: 29 30
+        on right: 27 28 29
+    asgn <st> (78)
+        on left: 31 32 33 34 35 36 37 38 39 40
+        on right: 6 32 40
+    print <st> (79)
+        on left: 41
+        on right: 7
+    read <st> (80)
+        on left: 42 43 44
+        on right: 8
+    exp <expNode> (81)
+        on left: 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70
+        on right: 18 19 20 21 22 23 24 26 27 28 29 30 31 37 38 39 41 47 48 49 50 51 52 53 54 55 56 60 61 62 63 64 65 66 67 68 69 70 72 74
+    listOfExp <parameters> (82)
+        on left: 71 72
+        on right: 59
+    restOfListOfExp <parameters> (83)
+        on left: 73 74
+        on right: 72 74
+
+
+State 0
+
+    0 $accept: • program $end
+
+    $default  reduce using rule 2 (stmtlist)
+
+    program   go to state 1
+    stmtlist  go to state 2
+
+
+State 1
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 program: stmtlist •
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    $end  reduce using rule 1 (program)
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 3
+
+    0 $accept: program $end •
+
+    $default  accept
+
+
+State 4
+
+    4 stmtlist: stmtlist error •
+
+    $default  reduce using rule 4 (stmtlist)
+
+
+State 5
+
+    5 stmt: SEMICOLON •
+
+    $default  reduce using rule 5 (stmt)
+
+
+State 6
+
+   41 print: PRINT • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 42
+
+
+State 7
+
+   42 read: READ • LPAREN VARIABLE RPAREN
+   43     | READ • LPAREN CONSTANT RPAREN
+
+    LPAREN  shift, and go to state 43
+
+
+State 8
+
+   44 read: READ_STRING • LPAREN VARIABLE RPAREN
+
+    LPAREN  shift, and go to state 44
+
+
+State 9
+
+   18 if: IF • controlSymbol exp THEN stmtlist END_IF
+   19   | IF • controlSymbol exp THEN stmtlist ELSE stmtlist END_IF
+
+    $default  reduce using rule 17 (controlSymbol)
+
+    controlSymbol  go to state 45
+
+
+State 10
+
+   20 while: WHILE • controlSymbol exp DO stmtlist END_WHILE
+
+    $default  reduce using rule 17 (controlSymbol)
+
+    controlSymbol  go to state 46
+
+
+State 11
+
+   24 do_while: DO • controlSymbol stmtlist WHILE exp SEMICOLON
+
+    $default  reduce using rule 17 (controlSymbol)
+
+    controlSymbol  go to state 47
+
+
+State 12
+
+   23 repeat: REPEAT • controlSymbol stmtlist UNTIL exp SEMICOLON
+
+    $default  reduce using rule 17 (controlSymbol)
+
+    controlSymbol  go to state 48
+
+
+State 13
+
+   21 for_stmt: FOR • controlSymbol VARIABLE FROM exp TO exp DO stmtlist END_FOR
+   22         | FOR • controlSymbol VARIABLE FROM exp TO exp STEP exp DO stmtlist END_FOR
+
+    $default  reduce using rule 17 (controlSymbol)
+
+    controlSymbol  go to state 49
+
+
+State 14
+
+   27 switch_stmt: SWITCH • LPAREN exp RPAREN case_list END_SWITCH
+   28            | SWITCH • LPAREN exp RPAREN case_list DEFAULT stmtlist END_SWITCH
+
+    LPAREN  shift, and go to state 50
+
+
+State 15
+
+   25 clear_screen: CLEAR_SCREEN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 51
+
+
+State 16
+
+   26 place: PLACE • LPAREN exp COMMA exp RPAREN SEMICOLON
+
+    LPAREN  shift, and go to state 52
+
+
+State 17
+
+   33 asgn: INCREMENTO • VARIABLE
+
+    VARIABLE  shift, and go to state 53
+
+
+State 18
+
+   34 asgn: DECREMENTO • VARIABLE
+
+    VARIABLE  shift, and go to state 54
+
+
+State 19
+
+   31 asgn: VARIABLE • ASSIGNMENT exp
+   32     | VARIABLE • ASSIGNMENT asgn
+   35     | VARIABLE • INCREMENTO
+   36     | VARIABLE • DECREMENTO
+   37     | VARIABLE • MAS_IGUAL exp
+   38     | VARIABLE • MENOS_IGUAL exp
+
+    ASSIGNMENT   shift, and go to state 55
+    MAS_IGUAL    shift, and go to state 56
+    MENOS_IGUAL  shift, and go to state 57
+    INCREMENTO   shift, and go to state 58
+    DECREMENTO   shift, and go to state 59
+
+
+State 20
+
+   39 asgn: CONSTANT • ASSIGNMENT exp
+   40     | CONSTANT • ASSIGNMENT asgn
+
+    ASSIGNMENT  shift, and go to state 60
+
+
+State 21
+
+    3 stmtlist: stmtlist stmt •
+
+    $default  reduce using rule 3 (stmtlist)
+
+
+State 22
+
+    9 stmt: if •
+
+    $default  reduce using rule 9 (stmt)
+
+
+State 23
+
+   10 stmt: while •
+
+    $default  reduce using rule 10 (stmt)
+
+
+State 24
+
+   11 stmt: for_stmt •
+
+    $default  reduce using rule 11 (stmt)
+
+
+State 25
+
+   12 stmt: repeat •
+
+    $default  reduce using rule 12 (stmt)
+
+
+State 26
+
+   13 stmt: do_while •
+
+    $default  reduce using rule 13 (stmt)
+
+
+State 27
+
+   14 stmt: clear_screen •
+
+    $default  reduce using rule 14 (stmt)
+
+
+State 28
+
+   15 stmt: place •
+
+    $default  reduce using rule 15 (stmt)
+
+
+State 29
+
+   16 stmt: switch_stmt •
+
+    $default  reduce using rule 16 (stmt)
+
+
+State 30
+
+    6 stmt: asgn • SEMICOLON
+
+    SEMICOLON  shift, and go to state 61
+
+
+State 31
+
+    7 stmt: print • SEMICOLON
+
+    SEMICOLON  shift, and go to state 62
+
+
+State 32
+
+    8 stmt: read • SEMICOLON
+
+    SEMICOLON  shift, and go to state 63
+
+
+State 33
+
+   52 exp: LPAREN • exp RPAREN
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 64
+
+
+State 34
+
+   53 exp: PLUS • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 65
+
+
+State 35
+
+   54 exp: MINUS • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 66
+
+
+State 36
+
+   68 exp: NOT • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 67
+
+
+State 37
+
+   46 exp: STRING •
+
+    $default  reduce using rule 46 (exp)
+
+
+State 38
+
+   45 exp: NUMBER •
+
+    $default  reduce using rule 45 (exp)
+
+
+State 39
+
+   57 exp: VARIABLE •
+
+    $default  reduce using rule 57 (exp)
+
+
+State 40
+
+   58 exp: CONSTANT •
+
+    $default  reduce using rule 58 (exp)
+
+
+State 41
+
+   59 exp: BUILTIN • LPAREN listOfExp RPAREN
+
+    LPAREN  shift, and go to state 68
+
+
+State 42
+
+   41 print: PRINT exp •
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 41 (print)
+
+
+State 43
+
+   42 read: READ LPAREN • VARIABLE RPAREN
+   43     | READ LPAREN • CONSTANT RPAREN
+
+    VARIABLE  shift, and go to state 86
+    CONSTANT  shift, and go to state 87
+
+
+State 44
+
+   44 read: READ_STRING LPAREN • VARIABLE RPAREN
+
+    VARIABLE  shift, and go to state 88
+
+
+State 45
+
+   18 if: IF controlSymbol • exp THEN stmtlist END_IF
+   19   | IF controlSymbol • exp THEN stmtlist ELSE stmtlist END_IF
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 89
+
+
+State 46
+
+   20 while: WHILE controlSymbol • exp DO stmtlist END_WHILE
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 90
+
+
+State 47
+
+   24 do_while: DO controlSymbol • stmtlist WHILE exp SEMICOLON
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 91
+
+
+State 48
+
+   23 repeat: REPEAT controlSymbol • stmtlist UNTIL exp SEMICOLON
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 92
+
+
+State 49
+
+   21 for_stmt: FOR controlSymbol • VARIABLE FROM exp TO exp DO stmtlist END_FOR
+   22         | FOR controlSymbol • VARIABLE FROM exp TO exp STEP exp DO stmtlist END_FOR
+
+    VARIABLE  shift, and go to state 93
+
+
+State 50
+
+   27 switch_stmt: SWITCH LPAREN • exp RPAREN case_list END_SWITCH
+   28            | SWITCH LPAREN • exp RPAREN case_list DEFAULT stmtlist END_SWITCH
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 94
+
+
+State 51
+
+   25 clear_screen: CLEAR_SCREEN SEMICOLON •
+
+    $default  reduce using rule 25 (clear_screen)
+
+
+State 52
+
+   26 place: PLACE LPAREN • exp COMMA exp RPAREN SEMICOLON
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 95
+
+
+State 53
+
+   33 asgn: INCREMENTO VARIABLE •
+
+    $default  reduce using rule 33 (asgn)
+
+
+State 54
+
+   34 asgn: DECREMENTO VARIABLE •
+
+    $default  reduce using rule 34 (asgn)
+
+
+State 55
+
+   31 asgn: VARIABLE ASSIGNMENT • exp
+   32     | VARIABLE ASSIGNMENT • asgn
+
+    LPAREN      shift, and go to state 33
+    PLUS        shift, and go to state 34
+    MINUS       shift, and go to state 35
+    NOT         shift, and go to state 36
+    INCREMENTO  shift, and go to state 17
+    DECREMENTO  shift, and go to state 18
+    STRING      shift, and go to state 37
+    NUMBER      shift, and go to state 38
+    VARIABLE    shift, and go to state 96
+    CONSTANT    shift, and go to state 97
+    BUILTIN     shift, and go to state 41
+
+    asgn  go to state 98
+    exp   go to state 99
+
+
+State 56
+
+   37 asgn: VARIABLE MAS_IGUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 100
+
+
+State 57
+
+   38 asgn: VARIABLE MENOS_IGUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 101
+
+
+State 58
+
+   35 asgn: VARIABLE INCREMENTO •
+
+    $default  reduce using rule 35 (asgn)
+
+
+State 59
+
+   36 asgn: VARIABLE DECREMENTO •
+
+    $default  reduce using rule 36 (asgn)
+
+
+State 60
+
+   39 asgn: CONSTANT ASSIGNMENT • exp
+   40     | CONSTANT ASSIGNMENT • asgn
+
+    LPAREN      shift, and go to state 33
+    PLUS        shift, and go to state 34
+    MINUS       shift, and go to state 35
+    NOT         shift, and go to state 36
+    INCREMENTO  shift, and go to state 17
+    DECREMENTO  shift, and go to state 18
+    STRING      shift, and go to state 37
+    NUMBER      shift, and go to state 38
+    VARIABLE    shift, and go to state 96
+    CONSTANT    shift, and go to state 97
+    BUILTIN     shift, and go to state 41
+
+    asgn  go to state 102
+    exp   go to state 103
+
+
+State 61
+
+    6 stmt: asgn SEMICOLON •
+
+    $default  reduce using rule 6 (stmt)
+
+
+State 62
+
+    7 stmt: print SEMICOLON •
+
+    $default  reduce using rule 7 (stmt)
+
+
+State 63
+
+    8 stmt: read SEMICOLON •
+
+    $default  reduce using rule 8 (stmt)
+
+
+State 64
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   52    | LPAREN exp • RPAREN
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    RPAREN            shift, and go to state 104
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 65
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   53    | PLUS exp •
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 53 (exp)
+
+
+State 66
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   54    | MINUS exp •
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 54 (exp)
+
+
+State 67
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   68    | NOT exp •
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    $default  reduce using rule 68 (exp)
+
+
+State 68
+
+   59 exp: BUILTIN LPAREN • listOfExp RPAREN
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    $default  reduce using rule 71 (listOfExp)
+
+    exp        go to state 105
+    listOfExp  go to state 106
+
+
+State 69
+
+   47 exp: exp PLUS • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 107
+
+
+State 70
+
+   48 exp: exp MINUS • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 108
+
+
+State 71
+
+   49 exp: exp MULTIPLICATION • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 109
+
+
+State 72
+
+   50 exp: exp DIVISION • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 110
+
+
+State 73
+
+   60 exp: exp GREATER_THAN • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 111
+
+
+State 74
+
+   62 exp: exp LESS_THAN • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 112
+
+
+State 75
+
+   61 exp: exp GREATER_OR_EQUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 113
+
+
+State 76
+
+   63 exp: exp LESS_OR_EQUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 114
+
+
+State 77
+
+   67 exp: exp OR • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 115
+
+
+State 78
+
+   66 exp: exp AND • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 116
+
+
+State 79
+
+   51 exp: exp DIV_ENTERA • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 117
+
+
+State 80
+
+   69 exp: exp CONCAT • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 118
+
+
+State 81
+
+   64 exp: exp EQUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 119
+
+
+State 82
+
+   65 exp: exp NOT_EQUAL • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 120
+
+
+State 83
+
+   55 exp: exp MODULO • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 121
+
+
+State 84
+
+   70 exp: exp '?' • exp ':' exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 122
+
+
+State 85
+
+   56 exp: exp POWER • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 123
+
+
+State 86
+
+   42 read: READ LPAREN VARIABLE • RPAREN
+
+    RPAREN  shift, and go to state 124
+
+
+State 87
+
+   43 read: READ LPAREN CONSTANT • RPAREN
+
+    RPAREN  shift, and go to state 125
+
+
+State 88
+
+   44 read: READ_STRING LPAREN VARIABLE • RPAREN
+
+    RPAREN  shift, and go to state 126
+
+
+State 89
+
+   18 if: IF controlSymbol exp • THEN stmtlist END_IF
+   19   | IF controlSymbol exp • THEN stmtlist ELSE stmtlist END_IF
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    THEN              shift, and go to state 127
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 90
+
+   20 while: WHILE controlSymbol exp • DO stmtlist END_WHILE
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    DO                shift, and go to state 128
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 91
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   24 do_while: DO controlSymbol stmtlist • WHILE exp SEMICOLON
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 129
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 92
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   23 repeat: REPEAT controlSymbol stmtlist • UNTIL exp SEMICOLON
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    UNTIL         shift, and go to state 130
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 93
+
+   21 for_stmt: FOR controlSymbol VARIABLE • FROM exp TO exp DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE • FROM exp TO exp STEP exp DO stmtlist END_FOR
+
+    FROM  shift, and go to state 131
+
+
+State 94
+
+   27 switch_stmt: SWITCH LPAREN exp • RPAREN case_list END_SWITCH
+   28            | SWITCH LPAREN exp • RPAREN case_list DEFAULT stmtlist END_SWITCH
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    RPAREN            shift, and go to state 132
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 95
+
+   26 place: PLACE LPAREN exp • COMMA exp RPAREN SEMICOLON
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    COMMA             shift, and go to state 133
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 96
+
+   31 asgn: VARIABLE • ASSIGNMENT exp
+   32     | VARIABLE • ASSIGNMENT asgn
+   35     | VARIABLE • INCREMENTO
+   36     | VARIABLE • DECREMENTO
+   37     | VARIABLE • MAS_IGUAL exp
+   38     | VARIABLE • MENOS_IGUAL exp
+   57 exp: VARIABLE •
+
+    ASSIGNMENT   shift, and go to state 55
+    MAS_IGUAL    shift, and go to state 56
+    MENOS_IGUAL  shift, and go to state 57
+    INCREMENTO   shift, and go to state 58
+    DECREMENTO   shift, and go to state 59
+
+    $default  reduce using rule 57 (exp)
+
+
+State 97
+
+   39 asgn: CONSTANT • ASSIGNMENT exp
+   40     | CONSTANT • ASSIGNMENT asgn
+   58 exp: CONSTANT •
+
+    ASSIGNMENT  shift, and go to state 60
+
+    $default  reduce using rule 58 (exp)
+
+
+State 98
+
+   32 asgn: VARIABLE ASSIGNMENT asgn •
+
+    $default  reduce using rule 32 (asgn)
+
+
+State 99
+
+   31 asgn: VARIABLE ASSIGNMENT exp •
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 31 (asgn)
+
+
+State 100
+
+   37 asgn: VARIABLE MAS_IGUAL exp •
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 37 (asgn)
+
+
+State 101
+
+   38 asgn: VARIABLE MENOS_IGUAL exp •
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 38 (asgn)
+
+
+State 102
+
+   40 asgn: CONSTANT ASSIGNMENT asgn •
+
+    $default  reduce using rule 40 (asgn)
+
+
+State 103
+
+   39 asgn: CONSTANT ASSIGNMENT exp •
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 39 (asgn)
+
+
+State 104
+
+   52 exp: LPAREN exp RPAREN •
+
+    $default  reduce using rule 52 (exp)
+
+
+State 105
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+   72 listOfExp: exp • restOfListOfExp
+
+    COMMA             shift, and go to state 134
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 73 (restOfListOfExp)
+
+    restOfListOfExp  go to state 135
+
+
+State 106
+
+   59 exp: BUILTIN LPAREN listOfExp • RPAREN
+
+    RPAREN  shift, and go to state 136
+
+
+State 107
+
+   47 exp: exp • PLUS exp
+   47    | exp PLUS exp •
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    $default  reduce using rule 47 (exp)
+
+
+State 108
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   48    | exp MINUS exp •
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    $default  reduce using rule 48 (exp)
+
+
+State 109
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   49    | exp MULTIPLICATION exp •
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 49 (exp)
+
+
+State 110
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   50    | exp DIVISION exp •
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 50 (exp)
+
+
+State 111
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   60    | exp GREATER_THAN exp •
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 60 (exp)
+
+
+State 112
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   62    | exp LESS_THAN exp •
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 62 (exp)
+
+
+State 113
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   61    | exp GREATER_OR_EQUAL exp •
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 61 (exp)
+
+
+State 114
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   63    | exp LESS_OR_EQUAL exp •
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 63 (exp)
+
+
+State 115
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   67    | exp OR exp •
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 67 (exp)
+
+
+State 116
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   66    | exp AND exp •
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 66 (exp)
+
+
+State 117
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   51    | exp DIV_ENTERA exp •
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 51 (exp)
+
+
+State 118
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   69    | exp CONCAT exp •
+   70    | exp • '?' exp ':' exp
+
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    $default  reduce using rule 69 (exp)
+
+
+State 119
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   64    | exp EQUAL exp •
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 64 (exp)
+
+
+State 120
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   65    | exp NOT_EQUAL exp •
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS            shift, and go to state 69
+    MINUS           shift, and go to state 70
+    MULTIPLICATION  shift, and go to state 71
+    DIVISION        shift, and go to state 72
+    DIV_ENTERA      shift, and go to state 79
+    CONCAT          shift, and go to state 80
+    MODULO          shift, and go to state 83
+    POWER           shift, and go to state 85
+
+    GREATER_THAN      error (nonassociative)
+    LESS_THAN         error (nonassociative)
+    GREATER_OR_EQUAL  error (nonassociative)
+    LESS_OR_EQUAL     error (nonassociative)
+    EQUAL             error (nonassociative)
+    NOT_EQUAL         error (nonassociative)
+
+    $default  reduce using rule 65 (exp)
+
+
+State 121
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   55    | exp MODULO exp •
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 55 (exp)
+
+
+State 122
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+   70    | exp '?' exp • ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    ':'               shift, and go to state 137
+    POWER             shift, and go to state 85
+
+
+State 123
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   56    | exp POWER exp •
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    POWER  shift, and go to state 85
+
+    $default  reduce using rule 56 (exp)
+
+
+State 124
+
+   42 read: READ LPAREN VARIABLE RPAREN •
+
+    $default  reduce using rule 42 (read)
+
+
+State 125
+
+   43 read: READ LPAREN CONSTANT RPAREN •
+
+    $default  reduce using rule 43 (read)
+
+
+State 126
+
+   44 read: READ_STRING LPAREN VARIABLE RPAREN •
+
+    $default  reduce using rule 44 (read)
+
+
+State 127
+
+   18 if: IF controlSymbol exp THEN • stmtlist END_IF
+   19   | IF controlSymbol exp THEN • stmtlist ELSE stmtlist END_IF
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 138
+
+
+State 128
+
+   20 while: WHILE controlSymbol exp DO • stmtlist END_WHILE
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 139
+
+
+State 129
+
+   20 while: WHILE • controlSymbol exp DO stmtlist END_WHILE
+   24 do_while: DO controlSymbol stmtlist WHILE • exp SEMICOLON
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    LPAREN    [reduce using rule 17 (controlSymbol)]
+    PLUS      [reduce using rule 17 (controlSymbol)]
+    MINUS     [reduce using rule 17 (controlSymbol)]
+    NOT       [reduce using rule 17 (controlSymbol)]
+    STRING    [reduce using rule 17 (controlSymbol)]
+    NUMBER    [reduce using rule 17 (controlSymbol)]
+    VARIABLE  [reduce using rule 17 (controlSymbol)]
+    CONSTANT  [reduce using rule 17 (controlSymbol)]
+    BUILTIN   [reduce using rule 17 (controlSymbol)]
+
+    controlSymbol  go to state 46
+    exp            go to state 140
+
+    shift/reduce conflict on token NUMBER:
+       17 controlSymbol: ε •
+       45 exp: • NUMBER
+      First example: stmtlist DO controlSymbol stmtlist WHILE • NUMBER SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                           $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp            SEMICOLON
+                                                                      ↳ 45: • NUMBER
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • NUMBER DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                              $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                         WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp          DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 45: NUMBER
+
+    shift/reduce conflict on token STRING:
+       17 controlSymbol: ε •
+       46 exp: • STRING
+      First example: stmtlist DO controlSymbol stmtlist WHILE • STRING SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                           $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp            SEMICOLON
+                                                                      ↳ 46: • STRING
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • STRING DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                              $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                         WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp          DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 46: STRING
+
+    shift/reduce conflict on token LPAREN:
+       17 controlSymbol: ε •
+       52 exp: • LPAREN exp RPAREN
+      First example: stmtlist DO controlSymbol stmtlist WHILE • LPAREN exp RPAREN SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                                      $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp                       SEMICOLON
+                                                                      ↳ 52: • LPAREN exp RPAREN
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • LPAREN exp RPAREN DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                         $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                                    WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp                     DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 52: LPAREN exp RPAREN
+
+    shift/reduce conflict on token PLUS:
+       17 controlSymbol: ε •
+       53 exp: • PLUS exp
+      First example: stmtlist DO controlSymbol stmtlist WHILE • PLUS exp SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                             $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp              SEMICOLON
+                                                                      ↳ 53: • PLUS exp
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • PLUS exp DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                           WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp            DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 53: PLUS exp
+
+    shift/reduce conflict on token MINUS:
+       17 controlSymbol: ε •
+       54 exp: • MINUS exp
+      First example: stmtlist DO controlSymbol stmtlist WHILE • MINUS exp SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                              $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp               SEMICOLON
+                                                                      ↳ 54: • MINUS exp
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • MINUS exp DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                 $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                            WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp             DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 54: MINUS exp
+
+    shift/reduce conflict on token VARIABLE:
+       17 controlSymbol: ε •
+       57 exp: • VARIABLE
+      First example: stmtlist DO controlSymbol stmtlist WHILE • VARIABLE SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                             $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp              SEMICOLON
+                                                                      ↳ 57: • VARIABLE
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • VARIABLE DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                           WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp            DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 57: VARIABLE
+
+    shift/reduce conflict on token CONSTANT:
+       17 controlSymbol: ε •
+       58 exp: • CONSTANT
+      First example: stmtlist DO controlSymbol stmtlist WHILE • CONSTANT SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                             $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp              SEMICOLON
+                                                                      ↳ 58: • CONSTANT
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • CONSTANT DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                           WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp            DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 58: CONSTANT
+
+    shift/reduce conflict on token BUILTIN:
+       17 controlSymbol: ε •
+       59 exp: • BUILTIN LPAREN listOfExp RPAREN
+      First example: stmtlist DO controlSymbol stmtlist WHILE • BUILTIN LPAREN listOfExp RPAREN SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                                                    $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp                                     SEMICOLON
+                                                                      ↳ 59: • BUILTIN LPAREN listOfExp RPAREN
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • BUILTIN LPAREN listOfExp RPAREN DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                                                       $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                                                  WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp                                   DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 59: BUILTIN LPAREN listOfExp RPAREN
+
+    shift/reduce conflict on token NOT:
+       17 controlSymbol: ε •
+       68 exp: • NOT exp
+      First example: stmtlist DO controlSymbol stmtlist WHILE • NOT exp SEMICOLON $end
+      Shift derivation
+        $accept
+        ↳ 0: program                                                                            $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist do_while
+                                ↳ 24: DO controlSymbol stmtlist WHILE exp             SEMICOLON
+                                                                      ↳ 68: • NOT exp
+      Second example: stmtlist DO controlSymbol stmtlist WHILE • NOT exp DO stmtlist END_WHILE WHILE exp SEMICOLON $end
+      Reduce derivation
+        $accept
+        ↳ 0: program                                                                                                                                               $end
+             ↳ 1: stmtlist
+                  ↳ 3: stmtlist stmt
+                                ↳ 13: do_while
+                                      ↳ 24: DO controlSymbol stmtlist                                                                          WHILE exp SEMICOLON
+                                                             ↳ 3: stmtlist stmt
+                                                                           ↳ 10: while
+                                                                                 ↳ 20: WHILE controlSymbol exp           DO stmtlist END_WHILE
+                                                                                             ↳ 17: ε •     ↳ 68: NOT exp
+
+
+
+State 130
+
+   23 repeat: REPEAT controlSymbol stmtlist UNTIL • exp SEMICOLON
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 141
+
+
+State 131
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM • exp TO exp DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE FROM • exp TO exp STEP exp DO stmtlist END_FOR
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 142
+
+
+State 132
+
+   27 switch_stmt: SWITCH LPAREN exp RPAREN • case_list END_SWITCH
+   28            | SWITCH LPAREN exp RPAREN • case_list DEFAULT stmtlist END_SWITCH
+
+    CASE  shift, and go to state 143
+
+    case_list  go to state 144
+
+
+State 133
+
+   26 place: PLACE LPAREN exp COMMA • exp RPAREN SEMICOLON
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 145
+
+
+State 134
+
+   74 restOfListOfExp: COMMA • exp restOfListOfExp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 146
+
+
+State 135
+
+   72 listOfExp: exp restOfListOfExp •
+
+    $default  reduce using rule 72 (listOfExp)
+
+
+State 136
+
+   59 exp: BUILTIN LPAREN listOfExp RPAREN •
+
+    $default  reduce using rule 59 (exp)
+
+
+State 137
+
+   70 exp: exp '?' exp ':' • exp
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 147
+
+
+State 138
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   18 if: IF controlSymbol exp THEN stmtlist • END_IF
+   19   | IF controlSymbol exp THEN stmtlist • ELSE stmtlist END_IF
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    ELSE          shift, and go to state 148
+    END_IF        shift, and go to state 149
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 139
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   20 while: WHILE controlSymbol exp DO stmtlist • END_WHILE
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    END_WHILE     shift, and go to state 150
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 140
+
+   24 do_while: DO controlSymbol stmtlist WHILE exp • SEMICOLON
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    SEMICOLON         shift, and go to state 151
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 141
+
+   23 repeat: REPEAT controlSymbol stmtlist UNTIL exp • SEMICOLON
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    SEMICOLON         shift, and go to state 152
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 142
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp • TO exp DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE FROM exp • TO exp STEP exp DO stmtlist END_FOR
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    TO                shift, and go to state 153
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 143
+
+   30 case_list: CASE • exp stmtlist
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 154
+
+
+State 144
+
+   27 switch_stmt: SWITCH LPAREN exp RPAREN case_list • END_SWITCH
+   28            | SWITCH LPAREN exp RPAREN case_list • DEFAULT stmtlist END_SWITCH
+   29 case_list: case_list • CASE exp stmtlist
+
+    CASE        shift, and go to state 155
+    DEFAULT     shift, and go to state 156
+    END_SWITCH  shift, and go to state 157
+
+
+State 145
+
+   26 place: PLACE LPAREN exp COMMA exp • RPAREN SEMICOLON
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    RPAREN            shift, and go to state 158
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 146
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+   74 restOfListOfExp: COMMA exp • restOfListOfExp
+
+    COMMA             shift, and go to state 134
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 73 (restOfListOfExp)
+
+    restOfListOfExp  go to state 159
+
+
+State 147
+
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+   70    | exp '?' exp ':' exp •
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 70 (exp)
+
+
+State 148
+
+   19 if: IF controlSymbol exp THEN stmtlist ELSE • stmtlist END_IF
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 160
+
+
+State 149
+
+   18 if: IF controlSymbol exp THEN stmtlist END_IF •
+
+    $default  reduce using rule 18 (if)
+
+
+State 150
+
+   20 while: WHILE controlSymbol exp DO stmtlist END_WHILE •
+
+    $default  reduce using rule 20 (while)
+
+
+State 151
+
+   24 do_while: DO controlSymbol stmtlist WHILE exp SEMICOLON •
+
+    $default  reduce using rule 24 (do_while)
+
+
+State 152
+
+   23 repeat: REPEAT controlSymbol stmtlist UNTIL exp SEMICOLON •
+
+    $default  reduce using rule 23 (repeat)
+
+
+State 153
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO • exp DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE FROM exp TO • exp STEP exp DO stmtlist END_FOR
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 161
+
+
+State 154
+
+   30 case_list: CASE exp • stmtlist
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 162
+
+
+State 155
+
+   29 case_list: case_list CASE • exp stmtlist
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 163
+
+
+State 156
+
+   28 switch_stmt: SWITCH LPAREN exp RPAREN case_list DEFAULT • stmtlist END_SWITCH
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 164
+
+
+State 157
+
+   27 switch_stmt: SWITCH LPAREN exp RPAREN case_list END_SWITCH •
+
+    $default  reduce using rule 27 (switch_stmt)
+
+
+State 158
+
+   26 place: PLACE LPAREN exp COMMA exp RPAREN • SEMICOLON
+
+    SEMICOLON  shift, and go to state 165
+
+
+State 159
+
+   74 restOfListOfExp: COMMA exp restOfListOfExp •
+
+    $default  reduce using rule 74 (restOfListOfExp)
+
+
+State 160
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   19 if: IF controlSymbol exp THEN stmtlist ELSE stmtlist • END_IF
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    END_IF        shift, and go to state 166
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 161
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp • DO stmtlist END_FOR
+   22         | FOR controlSymbol VARIABLE FROM exp TO exp • STEP exp DO stmtlist END_FOR
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    DO                shift, and go to state 167
+    STEP              shift, and go to state 168
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 162
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   30 case_list: CASE exp stmtlist •
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    CASE        reduce using rule 30 (case_list)
+    DEFAULT     reduce using rule 30 (case_list)
+    END_SWITCH  reduce using rule 30 (case_list)
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 163
+
+   29 case_list: case_list CASE exp • stmtlist
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 169
+
+
+State 164
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   28 switch_stmt: SWITCH LPAREN exp RPAREN case_list DEFAULT stmtlist • END_SWITCH
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    END_SWITCH    shift, and go to state 170
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 165
+
+   26 place: PLACE LPAREN exp COMMA exp RPAREN SEMICOLON •
+
+    $default  reduce using rule 26 (place)
+
+
+State 166
+
+   19 if: IF controlSymbol exp THEN stmtlist ELSE stmtlist END_IF •
+
+    $default  reduce using rule 19 (if)
+
+
+State 167
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp DO • stmtlist END_FOR
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 171
+
+
+State 168
+
+   22 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp STEP • exp DO stmtlist END_FOR
+
+    LPAREN    shift, and go to state 33
+    PLUS      shift, and go to state 34
+    MINUS     shift, and go to state 35
+    NOT       shift, and go to state 36
+    STRING    shift, and go to state 37
+    NUMBER    shift, and go to state 38
+    VARIABLE  shift, and go to state 39
+    CONSTANT  shift, and go to state 40
+    BUILTIN   shift, and go to state 41
+
+    exp  go to state 172
+
+
+State 169
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   29 case_list: case_list CASE exp stmtlist •
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    CASE        reduce using rule 29 (case_list)
+    DEFAULT     reduce using rule 29 (case_list)
+    END_SWITCH  reduce using rule 29 (case_list)
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 170
+
+   28 switch_stmt: SWITCH LPAREN exp RPAREN case_list DEFAULT stmtlist END_SWITCH •
+
+    $default  reduce using rule 28 (switch_stmt)
+
+
+State 171
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp DO stmtlist • END_FOR
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    END_FOR       shift, and go to state 173
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 172
+
+   22 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp STEP exp • DO stmtlist END_FOR
+   47 exp: exp • PLUS exp
+   48    | exp • MINUS exp
+   49    | exp • MULTIPLICATION exp
+   50    | exp • DIVISION exp
+   51    | exp • DIV_ENTERA exp
+   55    | exp • MODULO exp
+   56    | exp • POWER exp
+   60    | exp • GREATER_THAN exp
+   61    | exp • GREATER_OR_EQUAL exp
+   62    | exp • LESS_THAN exp
+   63    | exp • LESS_OR_EQUAL exp
+   64    | exp • EQUAL exp
+   65    | exp • NOT_EQUAL exp
+   66    | exp • AND exp
+   67    | exp • OR exp
+   69    | exp • CONCAT exp
+   70    | exp • '?' exp ':' exp
+
+    PLUS              shift, and go to state 69
+    MINUS             shift, and go to state 70
+    MULTIPLICATION    shift, and go to state 71
+    DIVISION          shift, and go to state 72
+    GREATER_THAN      shift, and go to state 73
+    LESS_THAN         shift, and go to state 74
+    GREATER_OR_EQUAL  shift, and go to state 75
+    LESS_OR_EQUAL     shift, and go to state 76
+    DO                shift, and go to state 174
+    OR                shift, and go to state 77
+    AND               shift, and go to state 78
+    DIV_ENTERA        shift, and go to state 79
+    CONCAT            shift, and go to state 80
+    EQUAL             shift, and go to state 81
+    NOT_EQUAL         shift, and go to state 82
+    MODULO            shift, and go to state 83
+    '?'               shift, and go to state 84
+    POWER             shift, and go to state 85
+
+
+State 173
+
+   21 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp DO stmtlist END_FOR •
+
+    $default  reduce using rule 21 (for_stmt)
+
+
+State 174
+
+   22 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp STEP exp DO • stmtlist END_FOR
+
+    $default  reduce using rule 2 (stmtlist)
+
+    stmtlist  go to state 175
+
+
+State 175
+
+    3 stmtlist: stmtlist • stmt
+    4         | stmtlist • error
+   22 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp STEP exp DO stmtlist • END_FOR
+
+    error         shift, and go to state 4
+    SEMICOLON     shift, and go to state 5
+    PRINT         shift, and go to state 6
+    READ          shift, and go to state 7
+    READ_STRING   shift, and go to state 8
+    IF            shift, and go to state 9
+    WHILE         shift, and go to state 10
+    DO            shift, and go to state 11
+    REPEAT        shift, and go to state 12
+    FOR           shift, and go to state 13
+    END_FOR       shift, and go to state 176
+    SWITCH        shift, and go to state 14
+    CLEAR_SCREEN  shift, and go to state 15
+    PLACE         shift, and go to state 16
+    INCREMENTO    shift, and go to state 17
+    DECREMENTO    shift, and go to state 18
+    VARIABLE      shift, and go to state 19
+    CONSTANT      shift, and go to state 20
+
+    stmt          go to state 21
+    if            go to state 22
+    while         go to state 23
+    for_stmt      go to state 24
+    repeat        go to state 25
+    do_while      go to state 26
+    clear_screen  go to state 27
+    place         go to state 28
+    switch_stmt   go to state 29
+    asgn          go to state 30
+    print         go to state 31
+    read          go to state 32
+
+
+State 176
+
+   22 for_stmt: FOR controlSymbol VARIABLE FROM exp TO exp STEP exp DO stmtlist END_FOR •
+
+    $default  reduce using rule 22 (for_stmt)
