@@ -166,15 +166,40 @@ Para palabras reservadas:
 
 **Clave**: la tabla de símbolos distingue entre palabras reservadas y variables. Si `lookupSymbol` devuelve `NULL`, la variable no existe → error semántico.
 
-### Modo string (estado `STRING`)
+### Strings con escapes (manejados en el lexer)
 
 ```
-<STRING>[^'\n]*   { yylval.str = strdup(yytext); }
-<STRING>\n        { /* error */ }
-<STRING>'         { BEGIN INITIAL; return CADENA; }
+{STRING_LIT}    {
+    yytext[yyleng-1] = '\0';       // quitar comilla final
+    char* content = yytext + 1;    // saltar comilla inicial
+    char* result  = (char*)malloc(strlen(content) + 1);
+    char* dest    = result;
+    char* src     = content;
+
+    while (*src) {
+        if (*src == '\\') {
+            src++;
+            switch (*src) {
+                case 'n':  *dest = '\n'; break;
+                case 't':  *dest = '\t'; break;
+                case '\\': *dest = '\\'; break;
+                case '\'': *dest = '\''; break;
+                case '0':  *dest = '\0'; break;
+                default:   *dest = *src; break;
+            }
+        } else {
+            *dest = *src;
+        }
+        dest++; src++;
+    }
+    *dest = '\0';
+
+    yylval.string = result;
+    return STRING;
+}
 ```
 
-Lee todo hasta la siguiente `'` (o newline). Manejo de secuencias de escape (`\n`, `\t`, `\\`, `\'`) se hace **después**, en `ast.cpp` al evaluar.
+**Las secuencias de escape se procesan AQUÍ, en el lexer**, no en `ast.cpp`. El lexer recibe `'hola\nmundo'` con el regex `\'([^'\\]|\\.)*\'` y lo transforma en `hola\nmundo` (con el newline real incrustado). El parser recibe el string ya resuelto y crea `StringNode` con él. `StringNode::evaluateString()` simplemente devuelve `this->_value` (inline en `ast.hpp`).
 
 ### Comentarios
 
@@ -253,26 +278,124 @@ lp::Nodo* programa = NULL;
 - **`%token <tipo>`**: los tokens tienen un tipo dentro de la unión.
 - **`%type <tipo>`**: los no-terminales también tienen tipo.
 
-### Precedencia (crítico para `?:`)
+### Precedencia y asociatividad (explicación desde 0)
 
-```yacc
-%right '?' ':'
-%left OR
-%left AND
-%left '=' "<>"
-%left '<' '>' "<=" ">="
-%left '+' '-'
-%left '*' '/' DIVISION_ENTERA MOD
-%right NOT
-%right MENOS_UNARIO
-%right POTENCIA
+#### El problema
+
+Bison es un parser LALR(1). Cuando ve `1 + 2 * 3`, hay DOS árboles sintácticos válidos:
+
+```
+      +              *
+     / \            / \
+    1   *          +   3
+       / \        / \
+      2   3      1   2
 ```
 
-**Orden**: los operadores que aparecen antes tienen **menor** precedencia.  
-**Clave para `?:`**: `%right '?' ':'` debe ir **antes** de `%left OR` (es decir, muy arriba) para que `1<2?10:20` se parse como `(1<2) ? 10 : 20` y no como `1 < (2?10:20)`.
+Esto se llama **conflicto shift/reduce**. Bison no sabe si:
+- **Reducir** `1 + 2` a `exp` (acción: `+`)
+- **Shift** (leer) `*` (acción: `*`)
 
-**`DIVISION_ENTERA` (`//`)** se pone al mismo nivel que `*` y `/`.  
-**`MENOS_UNARIO`** es una pseudo-token para el menos unario (no aparece en el código, solo para fijar precedencia).
+Para decidir, Bison mira la **precedencia** y **asociatividad** declaradas.
+
+#### `%left`, `%right`, `%nonassoc` — declarar operadores
+
+```yacc
+%left '+' '-'        ← misma línea = misma precedencia; asociatividad izquierda
+%right POTENCIA      ← asociatividad derecha
+%nonassoc '<' '>'    ← no asociativo (a<b<c = error de sintaxis)
+```
+
+**Cada línea es un nivel de precedencia**. Primera línea = menor precedencia, última línea = mayor.
+
+Tabla completa de este proyecto:
+
+| Línea | Asoc. | Operadores | Precedencia |
+|-------|-------|------------|-------------|
+| 1 | `%right` | `'?' ':'` (ternario) | **1** (mínima) |
+| 2 | `%left` | `OR` | 2 |
+| 3 | `%left` | `AND` | 3 |
+| 4 | `%nonassoc` | `EQUAL NOT_EQUAL GREATER_OR_EQUAL ...` (relacionales) | 4 |
+| 5 | `%left` | `NOT` | 5 |
+| 6 | `%left` | `PLUS MINUS` (suma/resta) | 6 |
+| 7 | `%left` | `CONCAT` (||) | 7 |
+| 8 | `%left` | `MULTIPLICATION DIVISION MODULO DIV_ENTERA` | 8 |
+| 9 | `%right` | `INCREMENTO DECREMENTO` (++/--) | 9 |
+| 10 | `%nonassoc` | `UNARY` | 10 |
+| 11 | `%right` | `POWER` (^) | **11** (máxima) |
+
+#### Cómo decide Bison cada conflicto
+
+Cuando hay conflicto entre **reducir una regla R** y **shiftear un token T**:
+
+```
+exp '+' exp  .  '*' exp
+             ↑
+        conflicto: reducir '+' (R) o shiftear '*' (T)?
+```
+
+Bison obtiene dos números:
+
+1. **Precedencia del token** `'*'` → nivel 8
+2. **Precedencia de la regla** (la regla `exp: exp '+' exp` hereda la del **último terminal** de su lado derecho = `'+'` → nivel 6)
+
+| Comparación | Acción | Ejemplo |
+|-------------|--------|---------|
+| **Token > Regla** | **Shift** (el nuevo operador manda) | `*` (8) > `+` (6) → `1 + (2 * 3)` ✅ |
+| **Token < Regla** | **Reduce** (la operación pendiente termina) | `+` (6) < `^` (11) → `(1 + 2) ^ 3` ✅ |
+| **Token = Regla + `%left`** | **Reduce** (asociativo izq.) | `1 - 2 - 3` → `(1 - 2) - 3` ✅ |
+| **Token = Regla + `%right`** | **Shift** (asociativo der.) | `2 ^ 3 ^ 4` → `2 ^ (3 ^ 4)` ✅ |
+| **Token = Regla + `%nonassoc`** | **Error sintáctico** | `a < b < c` → error |
+
+#### `%prec` — override manual de precedencia
+
+A veces la precedencia que Bison deduce automáticamente no es la que queremos. `%prec` fuerza a una regla a usar una precedencia **diferente**:
+
+```yacc
+exp: '-' exp %prec UNARY
+```
+
+Sin `%prec`: la regla `exp: '-' exp` heredaría la precedencia del último terminal de su lado derecho, que es `exp` (un no-terminal, no tiene precedencia → 0).  
+Con `%prec UNARY`: la regla usa la precedencia del token `UNARY` (nivel 10, muy alta).
+
+**¿Por qué hace falta?** Para que `-3 + 5` se parse como `(-3) + 5`, no como `-(3 + 5)`. El menos unario debe tener **más** precedencia que el menos binario.
+
+#### El caso concreto del ternario `?:`
+
+```
+1 < 2 ? 10 : 20
+```
+
+El parser llega a: `exp '<' exp . '?' exp ':' exp`. El `.` entre `2` y `?` es el conflicto:
+
+- **Reducir**: `1 < 2` a `exp` (usar el relacional `<`)
+- **Shift**: leer `?` (empezar el ternario)
+
+Bison compara:
+- **Token** `'?'` → nivel 1 (el más bajo de todos)
+- **Regla** `exp: exp '<' exp` → hereda de `'<'` → nivel 4
+
+**Token (1) < Regla (4)** → **Reduce** → `(1 < 2) ? 10 : 20` ✅
+
+**Si `%right '?' ':'` estuviera entre los relacionales y los aritméticos**:
+
+```yacc
+%left '<' '>'         ← nivel 1
+%right '?' ':'        ← nivel 2  ← MAL, mayor que '<'
+%left '+' '-'         ← nivel 3
+```
+
+`'?'` (nivel 2) > `'<'` (nivel 1) → **Shift** → `1 < (2 ? 10 : 20)` ❌
+
+**Regla de oro**: `%right '?' ':'` siempre el primero, con la menor precedencia.
+
+#### El %prec en el ternario
+
+```yacc
+exp: exp '?' exp ':' exp %prec '?'
+```
+
+El `%prec '?'` está aquí por seguridad. El último terminal de la regla es `':'`, y si `':'` tuviera una precedencia diferente a `'?'`, Bison usaría la de `':'`. Con `%prec '?'` forzamos a que use la de `'?'` explícitamente.
 
 ### Regla base
 
@@ -433,27 +556,122 @@ sentencia_incdec: INCREMENTO IDENTIFICADOR
 ;
 ```
 
-### Cómo evitar conflictos (0 sr)
+### Cómo garantizar 0 conflictos (shift/reduce = 0)
 
-Claves para mantener 0 shift/reduce:
+> El profesor compila con `make 2>&1 | grep conflict`. Si sale un solo conflicto, la pregunta vale 0.
 
-1. **`controlSymbol`**: Añadir un símbolo `controlSymbol` en la regla `DO` del `bloque_do_while` para el
-   `%nonassoc controlSymbol`:
-   ```yacc
-   bloque_do_while: DO controlSymbol sentencia WHILE expresion
-     { $$ = new lp::DoWhileStmt($5, $3); }
-   ;
-   controlSymbol: /* empty */
-   ;
-   ```
-   **Esto elimina 9 conflictos** porque el parser sabe si el `WHILE` pertenece al `do` o es un `while` normal.
-   **¡Importante!** Al añadir `controlSymbol`, el `$N` cambia: `$3` → `$4` (o `$5` → `$6` según la regla).
+#### ¿Qué es un conflicto shift/reduce?
 
-2. **`%nonassoc THEN`** para el *dangling else* (innecesario aquí por `END_IF`, pero bueno saberlo).
+Es una ambigüedad en la gramática. El parser no sabe si debe:
+- **Shift** (leer el siguiente token y apilarlo)
+- **Reduce** (aplicar una regla gramatical a lo que ya tiene en la pila)
 
-3. **No mezclar expresiones y sentencias** en la misma regla ambiguamente.
+Bison resuelve muchos automáticamente con la precedencia. Los que no puede resolver se muestran como:
+```
+State 42 contains 9 shift/reduce conflicts.
+```
 
-4. **Precedencia explícita** con `%left`, `%right`, `%nonassoc` para todos los operadores binarios.
+#### Causa #1: `while` vs `do ... while` (la más común: 9 conflictos)
+
+**Problema**: la gramática tiene el `while` normal y el `do ... while`. Al terminar el cuerpo del `do`, el parser encuentra `WHILE` y **no sabe** si ese `WHILE` es el final del `do-while` o el inicio de un `while` nuevo.
+
+**Solución**: añadir `controlSymbol` (regla épsilon) después del `DO`:
+
+```yacc
+controlSymbol: /* empty */ { control++; }
+;
+
+/* While normal */
+while: WHILE controlSymbol exp DO stmtlist END_WHILE
+    { $$ = new lp::WhileStmt($3, new lp::BlockStmt($5));
+      control--; }
+;
+
+/* Do-while con DOS controlSymbol */
+do_while: DO controlSymbol stmtlist WHILE controlSymbol exp SEMICOLON
+    { $$ = new lp::DoWhileStmt(new lp::BlockStmt($3), $6);
+      control--; control--; }
+;
+```
+
+**¿Por qué funciona?** El primer `controlSymbol` (en el `DO`) incrementa `control` a 1. El parser ve `WHILE` después del cuerpo y:
+- Si hay un `controlSymbol` antes → la reducción del cuerpo no se produce aún
+- Como `control=1`, el código de `stmtlist` que ejecuta sentencias en modo interactivo se salta
+
+El segundo `controlSymbol` (antes de `exp` en `do_while`) incrementa `control` a 2, y al final se decrementa dos veces.
+
+**Atención**: al añadir `controlSymbol`, la numeración `$N` cambia en todas las reglas donde aparece. En `do_while`, el `$3` (stmtlist) pasa a ser `$3` (porque el primer `controlSymbol` cuenta como `$2`), y `$5` (exp) pasa a ser `$6`.
+
+#### Causa #2: Dangling else (if sin END_IF)
+
+**Problema clásico**:
+```yacc
+stmt: IF exp THEN stmt
+    | IF exp THEN stmt ELSE stmt
+;
+```
+
+Cuando el parser ve `IF cond THEN IF cond THEN stmt ELSE stmt`, no sabe si el `ELSE` pertenece al primer `IF` o al segundo.
+
+**Solución**: usar `%nonassoc THEN` y `%nonassoc ELSE` para dar menor precedencia a `THEN`:
+
+```yacc
+%nonassoc THEN
+%nonassoc ELSE
+
+stmt: IF exp THEN stmt %prec THEN
+    | IF exp THEN stmt ELSE stmt
+;
+```
+
+`%nonassoc THEN` tiene menor precedencia que `%nonassoc ELSE`. Cuando hay conflicto entre reducir con la regla sin `ELSE` y shiftear `ELSE`, el `ELSE` gana (se asocia al `IF` más cercano).
+
+**En nuestro proyecto**: no hay este conflicto porque todos los bloques se cierran con `END_IF`, `END_WHILE`, etc. El `END_*` desambigua.
+
+#### Causa #3: Ambigüedad en expresiones
+
+Si declaras mal la precedencia o falta algún operador, aparecen conflictos SR entre operadores.
+
+**Solución**: declarar TODOS los operadores con `%left`, `%right` o `%nonassoc` en el orden correcto (ver sección de precedencia). 
+
+**Reglas**:
+- Cada operador binario necesita una declaración de precedencia
+- No mezcles niveles (ej. poner `'*'` y `'+'` en la misma línea)
+- Los operadores unarios con `%prec` y un token ficticio (`UNARY`, `MENOS_UNARIO`)
+
+#### Causa #4: Reglas épsilon sin control
+
+Las reglas épsilon (`/* empty */`) pueden generar conflictos si el parser no sabe si aplicar la regla vacía o no.
+
+**Solución**: las reglas épsilon solo deben aparecer donde sean estrictamente necesarias. Si una regla épsilon causa conflicto, considera reescribir la gramática.
+
+#### Causa #5: Expresiones y sentencias mezcladas
+
+No pongas reglas como:
+```yacc
+stmt: exp ';'   /* MAL: una expresion sola como sentencia */
+```
+
+Esto confunde al parser porque `exp` es a su vez `VARIABLE`, `NUMERO`, etc. Mejor separa claramente:
+```yacc
+stmt: asgn ';' | print ';' | if | while | ...
+exp:  ... solo expresiones ...
+```
+
+#### Checklist rápido para 0 sr conflicts
+
+1. ✅ **Precedencia**: cada operador tiene `%left`/`%right`/`%nonassoc` en el orden correcto
+2. ✅ **`controlSymbol`**: en `do_while` (y en `if`, `while`, `for`, `repeat` para el modo interactivo)
+3. ✅ **`%prec`**: en operadores unarios (`-`, `+`) y en el ternario
+4. ✅ **Separación**: sentencias y expresiones en no-terminales distintos
+5. ✅ **Sin reglas épsilon** innecesarias (solo `controlSymbol` y `stmtlist` vacío)
+6. ✅ **Probar**: `make 2>&1 | grep "conflict"` → no debe mostrar nada
+
+**Comando mágico para el examen**:
+```bash
+make 2>&1 | grep -E "conflict|error"
+```
+Si no sale nada, tienes 0 conflictos y compila. Es lo primero que hay que hacer tras implementar cualquier cambio.
 
 ---
 
