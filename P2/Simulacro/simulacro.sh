@@ -20,13 +20,13 @@ NC='\033[0m'
 
 hacer_backup() {
     mkdir -p "$BACKUP_DIR"
-    for f in parser/interpreter.l parser/interpreter.y ast/ast.hpp ast/ast.cpp; do
+    for f in parser/interpreter.l parser/interpreter.y ast/ast.hpp ast/ast.cpp table/init.hpp; do
         cp "$DIR/$f" "$BACKUP_DIR/$(basename "$f").bak" 2>/dev/null
     done
 }
 
 restaurar_backup() {
-    for f in parser/interpreter.l parser/interpreter.y ast/ast.hpp ast/ast.cpp; do
+    for f in parser/interpreter.l parser/interpreter.y ast/ast.hpp ast/ast.cpp table/init.hpp; do
         cp "$BACKUP_DIR/$(basename "$f").bak" "$DIR/$f" 2>/dev/null
     done
 }
@@ -145,6 +145,28 @@ setup_d() {
     sed -i '/RepeatStmt evaluate/,/^}/d' "$DIR/ast/ast.cpp"
 
     echo -e "${VERDE}  Hecho.${NC}"
+}
+
+setup_e1() {
+    echo -e "${CYAN}[SETUP E1] Eliminando constantes logicas de init.hpp...${NC}"
+
+    # init.hpp: eliminar true y false de logicalConstant[], dejar solo {"", 0}
+    sed -i '/{"true", true}/d' "$DIR/table/init.hpp"
+    sed -i '/{"false", false}/d' "$DIR/table/init.hpp"
+
+    echo -e "${VERDE}  Hecho (debes anadir {\"yes\", true} en logicalConstant[]).${NC}"
+}
+
+setup_e2() {
+    echo -e "${CYAN}[SETUP E2] Eliminando constantes numericas de init.hpp...${NC}"
+
+    # init.hpp: dejar solo PI y {"", 0} en numericConstant[]
+    sed -i '/{"E",[[:space:]]*2\./d' "$DIR/table/init.hpp"
+    sed -i '/{"GAMMA",/d' "$DIR/table/init.hpp"
+    sed -i '/{"DEG",/d' "$DIR/table/init.hpp"
+    sed -i '/{"PHI",/d' "$DIR/table/init.hpp"
+
+    echo -e "${VERDE}  Hecho (debes anadir {\"tau\", 6.283185307179586} en numericConstant[]).${NC}"
 }
 
 # ============================================================
@@ -291,6 +313,56 @@ test_d() {
     echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
 }
 
+test_e1() {
+    local ok=0 total=1
+    echo -e "\n${CYAN}--- Pregunta E1: Constante logica yes ---${NC}"
+
+    compilar
+    if [ $? -ne 0 ]; then
+        echo -e "${ROJO}  NO COMPILA → 0/5 puntos${NC}"
+        return 1
+    fi
+
+    echo "  Test E1: print yes → true"
+    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/e1_yes.p" 2>/dev/null | extraer_print)
+    if [ "$r1" = "true" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: true | Obtenido: '$r1'${NC}"
+    fi
+
+    echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
+}
+
+test_e2() {
+    local ok=0 total=2
+    echo -e "\n${CYAN}--- Pregunta E2: Constante numerica tau ---${NC}"
+
+    compilar
+    if [ $? -ne 0 ]; then
+        echo -e "${ROJO}  NO COMPILA → 0/5 puntos${NC}"
+        return 1
+    fi
+
+    echo "  Test E2a: print tau → 6.283185"
+    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/e2_tau.p" 2>/dev/null | extraer_print | head -1)
+    if [ "$r1" = "6.283185" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: 6.283185 | Obtenido: '$r1'${NC}"
+    fi
+
+    echo "  Test E2b: tau / 2 → 3.141593"
+    r2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/e2_tau.p" 2>/dev/null | extraer_print | tail -1)
+    if [ "$r2" = "3.141593" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: 3.141593 | Obtenido: '$r2'${NC}"
+    fi
+
+    echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
+}
+
 # ============================================================
 # MAIN
 # ============================================================
@@ -302,7 +374,9 @@ case "$1" in
             b) hacer_backup; setup_b ;;
             c) hacer_backup; setup_c ;;
             d) hacer_backup; setup_d ;;
-            *) echo "Uso: $0 setup {a|b|c|d}" >&2; exit 1 ;;
+            e1) hacer_backup; setup_e1 ;;
+            e2) hacer_backup; setup_e2 ;;
+            *) echo "Uso: $0 setup {a|b|c|d|e1|e2}" >&2; exit 1 ;;
         esac
         ;;
 
@@ -312,7 +386,9 @@ case "$1" in
             b) test_b ;;
             c) test_c ;;
             d) test_d ;;
-            *) echo "Uso: $0 test {a|b|c|d}" >&2; exit 1 ;;
+            e1) test_e1 ;;
+            e2) test_e2 ;;
+            *) echo "Uso: $0 test {a|b|c|d|e1|e2}" >&2; exit 1 ;;
         esac
         ;;
 
@@ -323,9 +399,9 @@ case "$1" in
 
     fulltest)
         echo -e "${AMARILLO}========================================${NC}"
-        echo -e "${AMARILLO}  SIMULACRO COMPLETO - 4 PREGUNTAS${NC}"
+        echo -e "${AMARILLO}  SIMULACRO COMPLETO - 6 PREGUNTAS${NC}"
         echo -e "${AMARILLO}========================================${NC}"
-        for q in a b c d; do
+        for q in a b c d e1 e2; do
             hacer_backup
             setup_$q
             test_$q
@@ -333,18 +409,18 @@ case "$1" in
         done
         echo -e "\n${AMARILLO}========================================${NC}"
         echo -e "${AMARILLO}  SIMULACRO COMPLETADO${NC}"
-        echo -e "${AMARILLO}  Usa './simulacro.sh test {a|b|c|d}' para${NC}"
+        echo -e "${AMARILLO}  Usa './simulacro.sh test {a|b|c|d|e1|e2}' para${NC}"
         echo -e "${AMARILLO}  evaluar preguntas individualmente.${NC}"
         echo -e "${AMARILLO}========================================${NC}"
         ;;
 
     *)
-        echo "Uso: $0 {setup|test|restore|fulltest} [a|b|c|d]"
+        echo "Uso: $0 {setup|test|restore|fulltest} [a|b|c|d|e1|e2]"
         echo ""
-        echo "  setup a|b|c|d   - Prepara pregunta (guarda backup y elimina codigo)"
-        echo "  test  a|b|c|d   - Compila y ejecuta tests de la pregunta"
-        echo "  restore         - Restaura archivos desde backup"
-        echo "  fulltest        - Ejecuta las 4 preguntas seguidas"
+        echo "  setup a|b|c|d|e1|e2  - Prepara pregunta (guarda backup y elimina codigo)"
+        echo "  test  a|b|c|d|e1|e2  - Compila y ejecuta tests de la pregunta"
+        echo "  restore              - Restaura archivos desde backup"
+        echo "  fulltest             - Ejecuta las 6 preguntas seguidas"
         exit 1
         ;;
 esac

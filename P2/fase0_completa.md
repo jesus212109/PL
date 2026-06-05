@@ -814,6 +814,38 @@ El `ForStmt` usa `double` para el contador. Si haces `for i from 1 to 10 step 1`
 
 ---
 
+### 11. **Añadir/eliminar constantes predefinidas (E1/E2)**
+
+Las constantes se definen en los arrays de `init.hpp`. **No hay que tocar `.l`, `.y`, ni el AST**:
+
+- **Numéricas** → array `numericConstant[]` en `init.hpp` (token `CONSTANT`, tipo `NUMBER`)
+- **Lógicas** → array `logicalConstant[]` en `init.hpp` (token `CONSTANT`, tipo `BOOL`)
+
+```cpp
+// Anadir constante numérica (solo init.hpp):
+numericConstant[] = {
+    {"PI",    3.14159265358979323846},
+    {"TAU",   6.283185307179586},       // ← nueva
+    {"",      0}
+};
+
+// Anadir constante lógica (solo init.hpp):
+logicalConstant[] = {
+    {"true", true},
+    {"false", false},
+    {"yes",  true},                     // ← nueva
+    {"",     0}
+};
+```
+
+El `init()` en `init.cpp` itera genéricamente sobre estos arrays — no se toca.  
+El lexer ya reconoce cualquier identificador y devuelve su token (`CONSTANT`).  
+`ConstantNode::evaluateNumber()`/`evaluateBool()` busca el símbolo en la tabla y llama a `getValue()`.
+
+**Trampa**: al usar `sed` para modificar `init.hpp`, cuidado con `{"", 0}` que aparece en varios arrays. Usa un patrón único como `/logicalConstant\[\] = {/a` para añadir tras la línea de apertura del array correcto.
+
+---
+
 ## 9. Checklist rápido
 
 ### Para cualquier pregunta del examen:
@@ -824,6 +856,7 @@ El `ForStmt` usa `double` para el contador. Si haces `for i from 1 to 10 step 1`
 - [ ] **En `interpreter.y`**: precedencia del nuevo operador (si aplica)
 - [ ] **En `interpreter.y`**: regla(s) sintáctica(s) que usan el nuevo token
 - [ ] **En `table/init.hpp`**: array `keyword[]` actualizado (solo si son palabras reservadas)
+- [ ] **En `table/init.hpp`**: arrays `numericConstant[]` o `logicalConstant[]` (si son constantes)
 - [ ] **En `ast.hpp`**: nueva clase AST (solo si el nodo no existe ya)
 - [ ] **En `ast.cpp`**: implementación del nuevo nodo
 - [ ] **Verificar 0 sr conflicts** con `make 2>&1 | grep conflict`

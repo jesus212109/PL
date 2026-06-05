@@ -3,86 +3,65 @@
 ## Estructura del Proyecto
 
 - **P1/** - Ejercicios de flex (ejercicios 1-5): ejemplos de analizadores léxicos
-- **P2/** - Ficheros `.p` de ejemplo proporcionados por el profesor (if.p, for.p, menu.p, etc.)
-- **Raíz**: Donde se creará el intérprete (`interpreter.l`, `interpreter.y`, `.hpp`, `.cpp`, Makefile)
-
-## Requisitos del Sistema
-
-```bash
-# Instalar herramientas necesarias (ejemplo para Fedora/CentOS)
-sudo dnf install flex bison gcc-c++ make
-
-# En Ubuntu/Debian:
-# sudo apt-get install flex bison g++ make
-```
-
-## Reglas Críticas
-
-1. **TODO el código en ESPAÑOL**: variables, clases, funciones, comentarios, nombres de tokens
-2. **Grammar SIN conflictos**: 0 shift/reduce, 0 reduce/reduce (usar `%nonassoc` y precedencia explícita si es necesario)
-3. **Case insensitive**: keywords e identificadores (usar `%option case-insensitive` en flex)
+- **P2/** - Núcleo del proyecto
+  - `*.p` - Ficheros de ejemplo del profesor (if.p, for.p, menu.p, etc.)
+  - **main/** - Intérprete de referencia completo (funciona 100%)
+  - **Simulacro/** - Simulacro de examen (base = Ejemplo 17, con scripts para practicar)
+    - `parser/interpreter.l` - Lexer
+    - `parser/interpreter.y` - Grammar (0 sr conflicts)
+    - `ast/ast.hpp` + `ast.cpp` - AST completo
+    - `table/init.hpp` - Registro de palabras reservadas
+    - `simulacro.sh` - Script setup/test/restore/fulltest
+    - `tests/` - Tests para preguntas A/B/C/D
+    - `backups/` - Copias limpias para restaurar
+    - `guia_rapida.md` - Chuleta rápida de examen
+    - `fase0_completa.md` / `.pdf` - Guía completa (todos los ficheros explicados)
 
 ## Compilación
 
 ```bash
-make        # Compila todo -> interpreter.exe
-make clean  # Limpia generados
+cd P2/Simulacro && make        # Compila -> interpreter.exe
+cd P2/Simulacro && make clean   # Limpia generados
 ```
 
 ## Ejecución
 
 ```bash
-./interpreter.exe              # Modo interactivo (Ctrl+D para salir)
-./interpreter.exe script.p    # Modo archivo (debe tener extensión .p)
+./interpreter.exe                   # Modo interactivo (Ctrl+D)
+./interpreter.exe script.p          # Modo archivo
 ```
 
-## Especificaciones del Lenguaje (.p)
+## Simulacro de Examen
 
-### Palabras Reservadas
-`read`, `read_string`, `print`, `if`, `then`, `else`, `end_if`, `while`, `do`, `end_while`, `repeat`, `until`, `for`, `from`, `step`, `to`, `end_for`, `switch`, `case`, `default`, `end_switch`, `clear_screen`, `place`
+```bash
+cd P2/Simulacro
+bash simulacro.sh setup_a    # Implementa pregunta A (//)
+bash simulacro.sh test       # Ejecuta todos los tests
+bash simulacro.sh restore    # Restaura a base limpia
+bash simulacro.sh fulltest   # setup -> test cada pregunta A/B/C/D
+```
 
-### Funciones Predefinidas
-`sin`, `cos`, `sqrt`, `log`, `log10`, `exp`, `integer`, `abs`
+## Reglas Críticas
 
-### Constantes Predefinidas
-`pi`, `e`, `gamma`, `phi`, `deg`
+1. **Código en ESPAÑOL**: variables, clases, funciones, comentarios, tokens
+2. **0 sr conflicts**: ni uno. Usar `controlSymbol` si es necesario
+3. **%option case-insensitive** en flex
+4. **Makefiles con -ansi** (C++98) para coincidir con Ejemplo 17
 
-### Operadores
-- Aritméticos: `+`, `-`, `*`, `/`, `//` (división entera), `mod`, `^` (potencia)
-- Relacionales: `<`, `<=`, `>`, `>=`, `=`, `<>`
-- Lógicos: `true`, `false`, `or`, `and`, `not`
-- String: `||` (concatenación)
-- Asignación: `:=`
-- Unarios extra: `++`, `--`, `+:=`, `-:=`
+## Escenario de Examen
 
-### Comentarios
-- Bloque: `(* ... *)` (NO anidados)
-- Línea: `# ...` (desde `#` hasta fin de línea; `#` al inicio de línea NO termina el programa)
+- Profesor da `ast.hpp` y `ast.cpp` pre-hechos → normalmente solo se tocan:
+  - `parser/interpreter.l`
+  - `parser/interpreter.y`
+  - `table/init.hpp`
+- **Pero** hay que saber modificar el AST también por si acaso
 
-### Tipos
-- Números: enteros, reales, notación científica (todos como `double` internamente)
-- Strings: comillas simples `'...'`, con secuencias de escape `\n`, `\t`, `\\`, `\'`
-- Booleanos: `true`/`false`
+## Errores Comunes en Examen
 
-## Extensiones Requeridas (para máxima puntuación)
-
-- `do { ... } while` loops
-- Operador ternario `? :`
-- Operadores unarios: `++`, `--`, `+:=`, `-:=`
-
-## Errores a Capturar
-
-- Léxicos: símbolos desconocidos, identificadores mal formados, comentarios sin cerrar
-- Sintácticos: estructura de sentencias inválida
-- Semánticos: tipos incompatibles en operaciones
-- Ejecución: bucles infinitos, archivo no encontrado
-
-## Patrón de Arquitectura Recomendado
-
-- **Flex**: `interpreter.l` con tokens para Bison
-- **Bison**: `interpreter.y` genera AST o ejecuta directamente
-- **C++**: Clase `Nodo` abstracta con `evaluar()` polimórfico, o Visitor pattern
-- **Tabla de Símbolos**: dinámico (tipado dinámico), almacenar valor + tipo actual
+1. **Falta init.hpp**: si añades keywords (`repeat`/`until`), deben estar en `keyword[]` de init.hpp
+2. **`?:` precedencia**: `%right '?' ':'` antes de `%left OR`, no entre relacionales
+3. **`$N` cambia**: al añadir `controlSymbol` en `do_while`, los números `$N` se desplazan
+4. **El AST necesita casteo**: `Variable*` → `NumericVariable*` para acceder a `getValue()`
 
 ## Documentación
 
