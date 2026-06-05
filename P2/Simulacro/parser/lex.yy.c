@@ -517,7 +517,8 @@ char *yytext;
 
 extern lp::Table table;
 extern int lineNumber;
-#line 520 "lex.yy.c"
+
+#line 521 "lex.yy.c"
 /* --- OPTIONS --- */
 /* --- REGULAR DEFINITIONS --- */
 /* NEW: identificador con guiones bajos (no puede terminar en _ ni tener __) */
@@ -526,7 +527,7 @@ extern int lineNumber;
 
 /* STATE (original de Ejemplo 17, para errores léxicos) */
 
-#line 529 "lex.yy.c"
+#line 530 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -745,11 +746,11 @@ YY_DECL
 		}
 
 	{
-#line 57 "interpreter.l"
+#line 58 "interpreter.l"
 
 
 
-#line 752 "lex.yy.c"
+#line 753 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -814,28 +815,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 60 "interpreter.l"
+#line 61 "interpreter.l"
 { ; }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 62 "interpreter.l"
+#line 63 "interpreter.l"
 { lineNumber++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 64 "interpreter.l"
+#line 65 "interpreter.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 66 "interpreter.l"
+#line 67 "interpreter.l"
 { return COMMA; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 68 "interpreter.l"
+#line 69 "interpreter.l"
 {
     yylval.number = atof(yytext);
     return NUMBER;
@@ -843,32 +844,32 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "interpreter.l"
+#line 74 "interpreter.l"
 { }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 75 "interpreter.l"
+#line 76 "interpreter.l"
 { BEGIN(COMMENT); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 76 "interpreter.l"
+#line 77 "interpreter.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 77 "interpreter.l"
+#line 78 "interpreter.l"
 { lineNumber++; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 78 "interpreter.l"
+#line 79 "interpreter.l"
 { }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 79 "interpreter.l"
+#line 80 "interpreter.l"
 {
     warning("Lexical error", "Comment without closing");
     BEGIN(INITIAL);
@@ -878,7 +879,7 @@ case YY_STATE_EOF(COMMENT):
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 85 "interpreter.l"
+#line 86 "interpreter.l"
 {
     yytext[yyleng-1] = '\0';       /* quitar comilla final */
     char* content = yytext + 1;    /* saltar comilla inicial */
@@ -910,7 +911,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 114 "interpreter.l"
+#line 115 "interpreter.l"
 {
 
     if (yytext[yyleng-1] == '_') {
@@ -938,140 +939,140 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 139 "interpreter.l"
+#line 140 "interpreter.l"
 {
     warning("Lexical error", "Malformed identifier");
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 143 "interpreter.l"
+#line 144 "interpreter.l"
 { return MAS_IGUAL; }       /* NEW */
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 144 "interpreter.l"
+#line 145 "interpreter.l"
 { return MENOS_IGUAL; }     /* NEW */
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 145 "interpreter.l"
+#line 146 "interpreter.l"
 { return ASSIGNMENT; }      /* MODIFIED: was '=' */
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 146 "interpreter.l"
+#line 147 "interpreter.l"
 { return INCREMENTO; }      /* NEW */
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 147 "interpreter.l"
+#line 148 "interpreter.l"
 { return DECREMENTO; }      /* NEW */
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 148 "interpreter.l"
+#line 149 "interpreter.l"
 { return LESS_OR_EQUAL; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 149 "interpreter.l"
+#line 150 "interpreter.l"
 { return GREATER_OR_EQUAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 150 "interpreter.l"
+#line 151 "interpreter.l"
 { return NOT_EQUAL; }        /* MODIFIED: was '!=' */
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 151 "interpreter.l"
+#line 152 "interpreter.l"
 { return EQUAL; }           /* MODIFIED: equality comparison */
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 152 "interpreter.l"
+#line 153 "interpreter.l"
 { return LESS_THAN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 153 "interpreter.l"
+#line 154 "interpreter.l"
 { return GREATER_THAN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 154 "interpreter.l"
+#line 155 "interpreter.l"
 { return CONCAT; }          /* MODIFIED: was OR */
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 155 "interpreter.l"
+#line 156 "interpreter.l"
 { return PLUS; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 156 "interpreter.l"
+#line 157 "interpreter.l"
 { return MINUS; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 157 "interpreter.l"
+#line 158 "interpreter.l"
 { return MULTIPLICATION; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 158 "interpreter.l"
+#line 159 "interpreter.l"
 { return DIVISION; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 159 "interpreter.l"
+#line 160 "interpreter.l"
 { return POWER; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 160 "interpreter.l"
+#line 161 "interpreter.l"
 { return DIV_ENTERA; }      /* NEW */
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 161 "interpreter.l"
+#line 162 "interpreter.l"
 { return '?'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 162 "interpreter.l"
+#line 163 "interpreter.l"
 { return ':'; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 163 "interpreter.l"
+#line 164 "interpreter.l"
 { return LPAREN; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 164 "interpreter.l"
+#line 165 "interpreter.l"
 { return RPAREN; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ERROR):
-#line 166 "interpreter.l"
+#line 167 "interpreter.l"
 { return 0; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 168 "interpreter.l"
+#line 169 "interpreter.l"
 { BEGIN(ERROR); yymore(); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 170 "interpreter.l"
+#line 171 "interpreter.l"
 { yymore(); }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 172 "interpreter.l"
+#line 173 "interpreter.l"
 {
     yyless(yyleng-1);
     warning("Lexical error", yytext);
@@ -1080,10 +1081,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 178 "interpreter.l"
+#line 179 "interpreter.l"
 ECHO;
 	YY_BREAK
-#line 1086 "lex.yy.c"
+#line 1087 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2086,6 +2087,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 178 "interpreter.l"
+#line 179 "interpreter.l"
 
 

@@ -28,6 +28,7 @@
 
 extern lp::Table table;
 extern int lineNumber;
+
 %}
 
 /* --- OPTIONS --- */
