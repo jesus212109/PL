@@ -33,7 +33,7 @@ restaurar_backup() {
 
 compilar() {
     make -C "$DIR" clean > /dev/null 2>&1
-    make -C "$DIR" 2>/dev/null
+    make -C "$DIR" 2>&1
     return $?
 }
 
@@ -71,31 +71,23 @@ setup_b() {
     echo -e "${CYAN}[SETUP B] Eliminando operador ternario ?:...${NC}"
 
     # interpreter.l: borrar lineas de ? y :
-    sed -i '/"?"[[:space:]]*{ return .?.; }/d' "$DIR/parser/interpreter.l"
-    sed -i '/":"[[:space:]]*{ return .:.; }/d' "$DIR/parser/interpreter.l"
+    sed -i '/^"?"/{N;d}' "$DIR/parser/interpreter.l"
+    sed -i '/^":"/{N;d}' "$DIR/parser/interpreter.l"
 
     # interpreter.y: borrar declaracion de precedencia
     sed -i "/%right '?' ':'/d" "$DIR/parser/interpreter.y"
-    # interpreter.y: borrar regla gramatical (5 lineas)
-    sed -i '/\/\* NEW: ternary operator ?: \*\//,+4d' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar regla gramatical (busca | exp seguido de '?' )
+    sed -i '/^[[:space:]]*|[[:space:]]*exp .[?]/{N;N;N;d}' "$DIR/parser/interpreter.y"
 
-    # ast.hpp: borrar clase TernaryNode (13 lineas)
-    sed -i '/class TernaryNode : public ExpNode {/,/^};/{
-      /^};/{
-        s/^};/}/
-        t
-      }
-      d
-    }' "$DIR/ast/ast.hpp"
-    # ast.hpp: borrar la linea vacia que queda + la linea del class (si falla lo de arriba)
-    sed -i '/^}class TernaryNode/d' "$DIR/ast/ast.hpp"
+    # ast.hpp: borrar clase TernaryNode
+    sed -i '/^class TernaryNode : public ExpNode {/,/^};/d' "$DIR/ast/ast.hpp"
 }
 
 setup_c() {
     echo -e "${CYAN}[SETUP C] Eliminando incremento/decremento/compuestos...${NC}"
 
     # interpreter.l: borrar +:=, -:=, ++, --
-    sed -i '/"\+:=".*MAS_IGUAL/d' "$DIR/parser/interpreter.l"
+    sed -i '/"+:=".*MAS_IGUAL/d' "$DIR/parser/interpreter.l"
     sed -i '/"-:=".*MENOS_IGUAL/d' "$DIR/parser/interpreter.l"
     sed -i '/"++".*INCREMENTO/d' "$DIR/parser/interpreter.l"
     sed -i '/"--".*DECREMENTO/d' "$DIR/parser/interpreter.l"
@@ -121,28 +113,91 @@ setup_c() {
 }
 
 setup_d() {
-    echo -e "${CYAN}[SETUP D] Eliminando bucle repeat-until...${NC}"
+    echo -e "${CYAN}[SETUP D] Eliminando repeat-until (debes anadir repeat N times)...${NC}"
 
     # interpreter.y: quitar REPEAT UNTIL de %token
     sed -i 's/ REPEAT UNTIL//' "$DIR/parser/interpreter.y"
-    # interpreter.y: quitar repeat de %type
-    sed -i 's/ repeat / /' "$DIR/parser/interpreter.y"
-    # interpreter.y: borrar stmt: repeat (4 lineas)
-    sed -i '/\/\*  NEW for practice \*\//{
-      /\/\*  NEW for practice \*\//{
-        N
-        /\n\t| repeat /!b
-        d
-      }
-    }' "$DIR/parser/interpreter.y"
+    # interpreter.y: quitar repeat de %type (solo linea %type con for_stmt)
+    sed -i '/%type.*for_stmt/ s/ repeat / /' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar stmt: repeat (3 lineas: | repeat, {, })
+    sed -i '/^[[:space:]]*|[[:space:]]*repeat[[:space:]]*$/{N;N;d}' "$DIR/parser/interpreter.y"
     # interpreter.y: borrar regla repeat (7 lineas desde el comentario)
     sed -i '/\/\* NEW for practice: repeat-until \*\//,+6d' "$DIR/parser/interpreter.y"
 
-    # ast.hpp: borrar RepeatStmt class
-    sed -i '/class RepeatStmt : public Statement {/,/^};/d' "$DIR/ast/ast.hpp"
+    # init.hpp: quitar repeat y until de keyword[]
+    sed -i '/{"repeat",[[:space:]]*REPEAT}/d' "$DIR/table/init.hpp"
+    sed -i '/{"until",[[:space:]]*UNTIL}/d' "$DIR/table/init.hpp"
 
-    # ast.cpp: borrar implementacion
-    sed -i '/RepeatStmt evaluate/,/^}/d' "$DIR/ast/ast.cpp"
+    echo -e "${VERDE}  Hecho.${NC}"
+}
+
+setup_f() {
+    echo -e "${CYAN}[SETUP F] Eliminando if con END_IF y block (debes anadir dangling else + block)...${NC}"
+
+    # interpreter.y: quitar %nonassoc THEN y %nonassoc ELSE
+    sed -i '/%nonassoc THEN/,+1d' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar regla if (11 lineas)
+    sed -i '/^if:[[:space:]]*IF/,+10d' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar regla block (5 lineas)
+    sed -i '/^block:[[:space:]]*LETFCURLYBRACKET/,+4d' "$DIR/parser/interpreter.y"
+    # interpreter.y: quitar if de %type (solo linea %type con stmt)
+    sed -i '/%type.*stmt asgn/ s/ if//' "$DIR/parser/interpreter.y"
+    # interpreter.y: quitar block de %type (solo linea %type con for_stmt)
+    sed -i '/%type.*for_stmt/ s/ block//' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar stmt: if (3 lineas)
+    sed -i '/^[[:space:]]*|[[:space:]]*if[[:space:]]*$/{N;N;d}' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar stmt: block (3 lineas)
+    sed -i '/^[[:space:]]*|[[:space:]]*block[[:space:]]*$/{N;N;d}' "$DIR/parser/interpreter.y"
+    # interpreter.y: quitar END_IF de %token (al FINAL para no romper comentarios)
+    sed -i 's/ END_IF//' "$DIR/parser/interpreter.y"
+
+    # init.hpp: quitar end_if de keyword[]
+    sed -i '/{"end_if",[[:space:]]*END_IF}/d' "$DIR/table/init.hpp"
+
+    echo -e "${VERDE}  Hecho.${NC}"
+}
+
+setup_g() {
+    echo -e "${CYAN}[SETUP G] Eliminando pre/post incremento/decremento (++x, x++, --x, x--)...${NC}"
+
+    # interpreter.l: borrar ++ y --
+    sed -i '/"++".*INCREMENTO/d' "$DIR/parser/interpreter.l"
+    sed -i '/"--".*DECREMENTO/d' "$DIR/parser/interpreter.l"
+
+    # interpreter.y: borrar linea de precedencia PRIMERO (antes de modificar tokens)
+    sed -i '/%right INCREMENTO DECREMENTO/d' "$DIR/parser/interpreter.y"
+    # interpreter.y: quitar INCREMENTO DECREMENTO de %token
+    sed -i 's/ INCREMENTO DECREMENTO//' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar increment/decrement (17 lineas desde el comentario)
+    sed -i '/\/\* NEW for practice: increment\/decrement \*\//,+16d' "$DIR/parser/interpreter.y"
+
+    # ast.hpp: borrar PreIncrementStmt y PostIncrementStmt
+    sed -i '/class PreIncrementStmt : public Statement {/,/^};/d' "$DIR/ast/ast.hpp"
+    sed -i '/class PostIncrementStmt : public Statement {/,/^};/d' "$DIR/ast/ast.hpp"
+
+    # ast.cpp: borrar implementaciones
+    sed -i '/PreIncrementStmt evaluate/,/^}/d' "$DIR/ast/ast.cpp"
+    sed -i '/PostIncrementStmt evaluate/,/^}/d' "$DIR/ast/ast.cpp"
+
+    echo -e "${VERDE}  Hecho.${NC}"
+}
+
+setup_p() {
+    echo -e "${CYAN}[SETUP P] Eliminando operador potencia ^...${NC}"
+
+    # interpreter.l: borrar ^
+    sed -i '/"\^".*POWER/d' "$DIR/parser/interpreter.l"
+
+    # interpreter.y: borrar %right POWER
+    sed -i '/%right POWER/d' "$DIR/parser/interpreter.y"
+    # interpreter.y: borrar regla exp POWER exp (4 lineas)
+    sed -i '/^[[:space:]]*|[[:space:]]*exp POWER exp/,+3d' "$DIR/parser/interpreter.y"
+
+    # ast.hpp: borrar clase PowerNode
+    sed -i '/^class PowerNode : public NumericOperatorNode/,/^};/d' "$DIR/ast/ast.hpp"
+
+    # ast.cpp: borrar PowerNode (printAST + evaluateNumber = 25 lineas)
+    sed -i '/^void lp::PowerNode::printAST/,+24d' "$DIR/ast/ast.cpp"
 
     echo -e "${VERDE}  Hecho.${NC}"
 }
@@ -286,7 +341,7 @@ test_c() {
 
 test_d() {
     local ok=0 total=2
-    echo -e "\n${CYAN}--- Pregunta D: Bucle repeat-until ---${NC}"
+    echo -e "\n${CYAN}--- Pregunta D: Bucle repeat N times ---${NC}"
 
     compilar
     if [ $? -ne 0 ]; then
@@ -294,20 +349,65 @@ test_d() {
         return 1
     fi
 
-    echo "  Test D1: repeat print x; until x>3  → 1 2 3"
-    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/d1_repeat.p" 2>/dev/null | extraer_print)
+    echo "  Test D1: repeat 3 times {x++; print x} → 1 2 3"
+    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/d3_repeat.p" 2>/dev/null | extraer_print)
     if [ "$r1" = $'1\n2\n3' ]; then
         echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
     else
         echo -e "    ${ROJO}❌ Esperado: 1\\n2\\n3 | Obtenido: '$r1'${NC}"
     fi
 
-    echo "  Test D2: repeat x:=x-1; until x=0; print x  → 0"
-    r2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/d2_repeat.p" 2>/dev/null | extraer_print)
-    if [ "$r2" = "0" ]; then
+    echo "  Test D2: repeat 4 times {x*=2}; print x → 16"
+    r2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/d4_repeat.p" 2>/dev/null | extraer_print)
+    if [ "$r2" = "16" ]; then
         echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
     else
-        echo -e "    ${ROJO}❌ Esperado: 0 | Obtenido: '$r2'${NC}"
+        echo -e "    ${ROJO}❌ Esperado: 16 | Obtenido: '$r2'${NC}"
+    fi
+
+    echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
+}
+
+test_f() {
+    local ok=0 total=4
+    echo -e "\n${CYAN}--- Pregunta F: Dangling else + block ---${NC}"
+
+    compilar
+    if [ $? -ne 0 ]; then
+        echo -e "${ROJO}  NO COMPILA → 0/15 puntos${NC}"
+        return 1
+    fi
+
+    echo "  Test F1: if (x>0) then print \"si\" → si"
+    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/f1_if.p" 2>/dev/null | extraer_print)
+    if [ "$r1" = "si" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: si | Obtenido: '$r1'${NC}"
+    fi
+
+    echo "  Test F2: if (x>0) then \"si\" else \"no\" → no (x=0)"
+    r2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/f2_if.p" 2>/dev/null | extraer_print)
+    if [ "$r2" = "no" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: no | Obtenido: '$r2'${NC}"
+    fi
+
+    echo "  Test F3: if anidado (dangling else asocia a if interior)"
+    r3=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/f3_if.p" 2>/dev/null | extraer_print)
+    if [ "$r3" = "A" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: A | Obtenido: '$r3'${NC}"
+    fi
+
+    echo "  Test F4: if con bloque { } (multiples stmts)"
+    r4=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/f4_if.p" 2>/dev/null | extraer_print)
+    if [ "$r4" = $'hello\nworld' ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: hello\\nworld | Obtenido: '$r4'${NC}"
     fi
 
     echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
@@ -363,6 +463,82 @@ test_e2() {
     echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
 }
 
+test_g() {
+    local ok=0 total=4
+    echo -e "\n${CYAN}--- Pregunta G: Pre/Post incremento/decremento ---${NC}"
+
+    compilar
+    if [ $? -ne 0 ]; then
+        echo -e "${ROJO}  NO COMPILA → 0/15 puntos${NC}"
+        return 1
+    fi
+
+    echo "  Test G1: ++x (x=5) → 6 (tipo PreIncrementStmt en AST)"
+    raw1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/g1_prepost.p" 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+    val1=$(echo "$raw1" | grep '^print:' | sed 's/^print: *//' | head -1)
+    if echo "$raw1" | grep -q "PreIncrementStmt: x" && [ "$val1" = "6" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: PreIncrementStmt: x y print: 6${NC}"
+    fi
+
+    echo "  Test G2: x++ (x=5) → 6 (tipo PostIncrementStmt en AST)"
+    val2=$(echo "$raw1" | grep '^print:' | sed 's/^print: *//' | tail -1)
+    if echo "$raw1" | grep -q "PostIncrementStmt: x" && [ "$val2" = "6" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: PostIncrementStmt: x y print: 6${NC}"
+    fi
+
+    echo "  Test G3: --x (x=5) → 4 (tipo PreIncrementStmt decremento)"
+    raw2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/g2_prepost.p" 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+    val3=$(echo "$raw2" | grep '^print:' | sed 's/^print: *//' | head -1)
+    if echo "$raw2" | grep -q "PreIncrementStmt: x" && [ "$val3" = "4" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: PreIncrementStmt: x y print: 4${NC}"
+    fi
+
+    echo "  Test G4: x-- (x=5) → 4 (tipo PostIncrementStmt decremento)"
+    val4=$(echo "$raw2" | grep '^print:' | sed 's/^print: *//' | tail -1)
+    if echo "$raw2" | grep -q "PostIncrementStmt: x" && [ "$val4" = "4" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: PostIncrementStmt: x y print: 4${NC}"
+    fi
+
+    echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
+}
+
+test_p() {
+    local ok=0 total=2
+    echo -e "\n${CYAN}--- Pregunta P: Potencia ^ ---${NC}"
+
+    compilar
+    if [ $? -ne 0 ]; then
+        echo -e "${ROJO}  NO COMPILA → 0/10 puntos${NC}"
+        return 1
+    fi
+
+    echo "  Test P1: 2^3 = 8"
+    r1=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/p1_power.p" 2>/dev/null | extraer_print)
+    if [ "$r1" = "8" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: 8 | Obtenido: '$r1'${NC}"
+    fi
+
+    echo "  Test P2: 2^3^2 = 512 (asociativo a derecha)"
+    r2=$(echo "" | "$DIR/interpreter.exe" "$TESTS_DIR/p2_power.p" 2>/dev/null | extraer_print)
+    if [ "$r2" = "512" ]; then
+        echo -e "    ${VERDE}✅ OK${NC}"; ok=$((ok+1))
+    else
+        echo -e "    ${ROJO}❌ Esperado: 512 | Obtenido: '$r2'${NC}"
+    fi
+
+    echo -e "${AMARILLO}  Puntuacion: $ok/$total ($((ok*5)) puntos)${NC}"
+}
+
 # ============================================================
 # MAIN
 # ============================================================
@@ -376,7 +552,10 @@ case "$1" in
             d) hacer_backup; setup_d ;;
             e1) hacer_backup; setup_e1 ;;
             e2) hacer_backup; setup_e2 ;;
-            *) echo "Uso: $0 setup {a|b|c|d|e1|e2}" >&2; exit 1 ;;
+            f) hacer_backup; setup_f ;;
+            g) hacer_backup; setup_g ;;
+            p) hacer_backup; setup_p ;;
+            *) echo "Uso: $0 setup {a|b|c|d|e1|e2|f|g|p}" >&2; exit 1 ;;
         esac
         ;;
 
@@ -388,7 +567,10 @@ case "$1" in
             d) test_d ;;
             e1) test_e1 ;;
             e2) test_e2 ;;
-            *) echo "Uso: $0 test {a|b|c|d|e1|e2}" >&2; exit 1 ;;
+            f) test_f ;;
+            g) test_g ;;
+            p) test_p ;;
+            *) echo "Uso: $0 test {a|b|c|d|e1|e2|f|g|p}" >&2; exit 1 ;;
         esac
         ;;
 
@@ -399,9 +581,9 @@ case "$1" in
 
     fulltest)
         echo -e "${AMARILLO}========================================${NC}"
-        echo -e "${AMARILLO}  SIMULACRO COMPLETO - 6 PREGUNTAS${NC}"
+        echo -e "${AMARILLO}  SIMULACRO COMPLETO - 9 PREGUNTAS${NC}"
         echo -e "${AMARILLO}========================================${NC}"
-        for q in a b c d e1 e2; do
+        for q in a b c d e1 e2 f g p; do
             hacer_backup
             setup_$q
             test_$q
@@ -409,18 +591,18 @@ case "$1" in
         done
         echo -e "\n${AMARILLO}========================================${NC}"
         echo -e "${AMARILLO}  SIMULACRO COMPLETADO${NC}"
-        echo -e "${AMARILLO}  Usa './simulacro.sh test {a|b|c|d|e1|e2}' para${NC}"
+        echo -e "${AMARILLO}  Usa './simulacro.sh test {a|b|c|d|e1|e2|f|g|p}' para${NC}"
         echo -e "${AMARILLO}  evaluar preguntas individualmente.${NC}"
         echo -e "${AMARILLO}========================================${NC}"
         ;;
 
     *)
-        echo "Uso: $0 {setup|test|restore|fulltest} [a|b|c|d|e1|e2]"
+        echo "Uso: $0 {setup|test|restore|fulltest} [a|b|c|d|e1|e2|f|g|p]"
         echo ""
-        echo "  setup a|b|c|d|e1|e2  - Prepara pregunta (guarda backup y elimina codigo)"
-        echo "  test  a|b|c|d|e1|e2  - Compila y ejecuta tests de la pregunta"
+        echo "  setup a|b|c|d|e1|e2|f|g|p  - Prepara pregunta (guarda backup y elimina codigo)"
+        echo "  test  a|b|c|d|e1|e2|f|g|p  - Compila y ejecuta tests de la pregunta"
         echo "  restore              - Restaura archivos desde backup"
-        echo "  fulltest             - Ejecuta las 6 preguntas seguidas"
+        echo "  fulltest             - Ejecuta las 9 preguntas seguidas"
         exit 1
         ;;
 esac

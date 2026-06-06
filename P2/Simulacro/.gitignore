@@ -1,0 +1,8 @@
+*.o
+*.exe
+interpreter.tab.c
+interpreter.tab.h
+lex.yy.c
+interpreter.gv
+interpreter.dot
+*.bak
