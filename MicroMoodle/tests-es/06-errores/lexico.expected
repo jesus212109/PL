@@ -1,0 +1,15 @@
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 3 --> Lexical error
+	@
+printASTStmt: printAST
+	NumberNode: 1
+
+assignment_node: =
+	x
+	NumberNode: 5
+
+printASTStmt: printAST
+	NumberNode: 2
+
+print: 1
+print: 2

@@ -1,0 +1,95 @@
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 3 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 5 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 6 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 7 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 8 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 9 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 16 --> Parser error
+	syntax error, unexpected MODULO
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 18 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 19 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 23 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 24 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 25 --> Parser error
+	syntax error, unexpected AND
+assignment_node: =
+	x
+	NumberNode: 10
+
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+printASTStmt: printAST
+	VariableNode: s (Type: 312)
+
+printASTStmt: printAST
+	VariableNode: r (Type: 312)
+
+printASTStmt: printAST
+	VariableNode: m (Type: 312)
+
+printASTStmt: printAST
+	VariableNode: d (Type: 312)
+
+printASTStmt: printAST
+	VariableNode: di (Type: 312)
+
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+printASTStmt: printAST
+	EqualNode: ==
+	VariableNode: x (Type: 312)
+	NumberNode: 10
+
+printASTStmt: printAST
+	NotEqualNode: !=
+	VariableNode: x (Type: 312)
+	NumberNode: 5
+
+EmptyStmt 
+EmptyStmt 
+EmptyStmt 
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 26 --> Runtime error: incompatible type for 
+	print
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 26 --> Runtime error: incompatible type for 
+	print
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 26 --> Runtime error: incompatible type for 
+	print
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 26 --> Runtime error: incompatible type for 
+	print
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 26 --> Runtime error: incompatible type for 
+	print
+print: true
+print: true

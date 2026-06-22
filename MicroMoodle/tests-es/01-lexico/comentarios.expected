@@ -1,0 +1,12 @@
+printASTStmt: printAST
+	NumberNode: 1
+
+printASTStmt: printAST
+	NumberNode: 2
+
+printASTStmt: printAST
+	NumberNode: 3
+
+print: 1
+print: 2
+print: 3

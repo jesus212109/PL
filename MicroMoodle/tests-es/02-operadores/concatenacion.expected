@@ -1,0 +1,12 @@
+printASTStmt: printAST
+	ConcatenationNode
+
+printASTStmt: printAST
+	ConcatenationNode
+
+printASTStmt: printAST
+	ConcatenationNode
+
+print: hola mundo
+print: abc
+print: numero: 

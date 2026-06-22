@@ -1,0 +1,54 @@
+printASTStmt: printAST
+	LessThanNode: <
+	NumberNode: 1
+	NumberNode: 2
+
+printASTStmt: printAST
+	LessThanNode: <
+	NumberNode: 2
+	NumberNode: 1
+
+printASTStmt: printAST
+	LessOrEqualNode: <=
+	NumberNode: 1
+	NumberNode: 1
+
+printASTStmt: printAST
+	GreaterThanNode: >
+	NumberNode: 2
+	NumberNode: 1
+
+printASTStmt: printAST
+	GreaterOrEqualNode: >= 
+	NumberNode: 2
+	NumberNode: 2
+
+printASTStmt: printAST
+	EqualNode: ==
+	NumberNode: 3
+	NumberNode: 3
+
+printASTStmt: printAST
+	EqualNode: ==
+	NumberNode: 3
+	NumberNode: 4
+
+printASTStmt: printAST
+	NotEqualNode: !=
+	NumberNode: 3
+	NumberNode: 4
+
+printASTStmt: printAST
+	NotEqualNode: !=
+	NumberNode: 3
+	NumberNode: 3
+
+print: true
+print: false
+print: true
+print: true
+print: true
+print: true
+print: false
+print: true
+print: false

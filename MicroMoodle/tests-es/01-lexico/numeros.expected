@@ -1,0 +1,25 @@
+printASTStmt: printAST
+	NumberNode: 42
+
+printASTStmt: printAST
+	NumberNode: 3.14
+
+printASTStmt: printAST
+	UnaryMinusNode: -
+	NumberNode: 7
+
+printASTStmt: printAST
+	NumberNode: 150
+
+printASTStmt: printAST
+	NumberNode: 0.000123
+
+printASTStmt: printAST
+	NumberNode: 0
+
+print: 42
+print: 3.14
+print: -7
+print: 150
+print: 0.000123
+print: 0

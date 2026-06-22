@@ -1,0 +1,5 @@
+PlaceStmt
+printASTStmt: printAST
+	StringNode: posicionado
+
+[5;10Hprint: posicionado

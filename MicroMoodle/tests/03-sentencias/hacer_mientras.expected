@@ -1,0 +1,12 @@
+assignment_node: =
+	x
+	NumberNode: 1
+
+DoWhileStmt
+printASTStmt: printAST
+	StringNode: fin
+
+print: 1
+print: 2
+print: 3
+print: fin

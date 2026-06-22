@@ -1,0 +1,40 @@
+printASTStmt: printAST
+	PlusNode: +
+	NumberNode: 2
+	NumberNode: 3
+
+printASTStmt: printAST
+	MinusNode: -
+	NumberNode: 10
+	NumberNode: 4
+
+printASTStmt: printAST
+	MultiplicationNode: *
+	NumberNode: 3
+	NumberNode: 4
+
+printASTStmt: printAST
+	DivisionNode: /
+	NumberNode: 15
+	NumberNode: 4
+
+printASTStmt: printAST
+	IntegerDivisionNode
+
+printASTStmt: printAST
+	PowerNode: ^
+	NumberNode: 2
+	NumberNode: 3
+
+printASTStmt: printAST
+	ModuloNode: %
+	NumberNode: 7
+	NumberNode: 3
+
+print: 5
+print: 6
+print: 12
+print: 3.75
+print: 2
+print: 8
+print: 1

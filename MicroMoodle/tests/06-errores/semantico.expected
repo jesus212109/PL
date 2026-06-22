@@ -1,0 +1,7 @@
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 3 --> Semantic error in assignment: it is not allowed to modify a constant 
+	pi
+printASTStmt: printAST
+	NumberNode: 2
+
+print: 2

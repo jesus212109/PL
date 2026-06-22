@@ -1,0 +1,25 @@
+assignment_node: =
+	x
+	NumberNode: 5
+
+IfStmt: 
+	GreaterThanNode: >
+	VariableNode: x (Type: 312)
+	NumberNode: 0
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: positivo
+
+
+EmptyStmt 
+IfStmt: 
+	LessThanNode: <
+	VariableNode: x (Type: 312)
+	NumberNode: 0
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: negativo
+
+
+EmptyStmt 
+print: positivo

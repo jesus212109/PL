@@ -1,0 +1,38 @@
+assignment_node: =
+	x
+	NumberNode: 3
+
+IfStmt: 
+	GreaterThanNode: >
+	VariableNode: x (Type: 312)
+	NumberNode: 5
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: mayor
+
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: menor o igual
+
+
+EmptyStmt 
+assignment_node: =
+	x
+	NumberNode: 7
+
+IfStmt: 
+	GreaterThanNode: >
+	VariableNode: x (Type: 312)
+	NumberNode: 5
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: mayor
+
+	BlockStmt: 
+printASTStmt: printAST
+	StringNode: menor o igual
+
+
+EmptyStmt 
+print: menor o igual
+print: mayor

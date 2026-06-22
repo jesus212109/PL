@@ -1,0 +1,18 @@
+printASTStmt: printAST
+	StringNode: linea1
+linea2
+
+printASTStmt: printAST
+	StringNode: columna1	columna2
+
+printASTStmt: printAST
+	StringNode: backslash: \
+
+printASTStmt: printAST
+	StringNode: comilla: '
+
+print: linea1
+linea2
+print: columna1	columna2
+print: backslash: \
+print: comilla: '

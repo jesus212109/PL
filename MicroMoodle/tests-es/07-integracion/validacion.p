@@ -1,0 +1,25 @@
+# Test validacion: combina multiples sentencias y operadores
+x := 10;
+y := 3;
+# Aritmeticos
+s := x + y;
+r := x - y;
+m := x * y;
+d := x / y;
+di := x // y;
+mod := x mod y;
+escribir s;
+escribir r;
+escribir m;
+escribir d;
+escribir di;
+escribir mod;
+# Relacionales
+escribir x > y;
+escribir x <= y;
+escribir x = 10;
+escribir x <> 5;
+# Logicos
+escribir (x > 5) y (y < 5);
+escribir (x > 5) o (y > 5);
+escribir no (x = y);

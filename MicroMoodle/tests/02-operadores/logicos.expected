@@ -1,0 +1,54 @@
+printASTStmt: printAST
+	AndNode: &&
+	ConstantNode: true (Type: 310)
+	ConstantNode: true (Type: 310)
+
+printASTStmt: printAST
+	AndNode: &&
+	ConstantNode: true (Type: 310)
+	ConstantNode: false (Type: 310)
+
+printASTStmt: printAST
+	OrNode: ||
+	ConstantNode: false (Type: 310)
+	ConstantNode: true (Type: 310)
+
+printASTStmt: printAST
+	OrNode: ||
+	ConstantNode: false (Type: 310)
+	ConstantNode: false (Type: 310)
+
+printASTStmt: printAST
+	NotNode: !
+	ConstantNode: true (Type: 310)
+
+printASTStmt: printAST
+	NotNode: !
+	ConstantNode: false (Type: 310)
+
+printASTStmt: printAST
+	AndNode: &&
+	LessThanNode: <
+	NumberNode: 1
+	NumberNode: 2
+	LessThanNode: <
+	NumberNode: 2
+	NumberNode: 3
+
+printASTStmt: printAST
+	AndNode: &&
+	LessThanNode: <
+	NumberNode: 1
+	NumberNode: 2
+	GreaterThanNode: >
+	NumberNode: 2
+	NumberNode: 3
+
+print: true
+print: false
+print: true
+print: false
+print: false
+print: true
+print: true
+print: false

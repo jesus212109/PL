@@ -6,6 +6,7 @@
 - **P2/** - Núcleo del proyecto
   - `*.p` - Ficheros de ejemplo del profesor (if.p, for.p, menu.p, etc.)
   - **main/** - Intérprete de referencia completo (funciona 100%)
+  - **ejemplo17/** - Base limpia Ejemplo 17 (estudiante), compila con 1 SR conflict (dangling else)
   - **Simulacro/** - Simulacro de examen (base = Ejemplo 17, con scripts para practicar)
     - `parser/interpreter.l` - Lexer
     - `parser/interpreter.y` - Grammar (0 sr conflicts)
@@ -41,12 +42,25 @@ bash simulacro.sh restore    # Restaura a base limpia
 bash simulacro.sh fulltest   # setup -> test cada pregunta A/B/C/D
 ```
 
+## PreparaciónExMoodle
+
+- **`enunciado.md`** - Especificación completa del pseudocódigo en español (keywords, diseño, ejemplos)
+- **`tests/`** - 36 tests en inglés, verificados contra `main/interpreter.exe`
+  - `runner.sh` - Ejecuta todos los tests y compara con `.expected`
+  - Soporta ficheros `.input` para test con entrada stdin
+- **`tests-es/`** - 36 tests equivalentes en español (requieren intérprete traducido)
+  - `runner-es.sh` - Mismo sistema que `runner.sh`
+  - `generate-es.sh` - Genera `.expected` tras implementar el español (ejecutar con `bash generate-es.sh`)
+- **`guia_rapida_examen.md`** - Chuleta de examen: comandos, patrones, errores, soluciones
+
 ## Reglas Críticas
 
 1. **Código en ESPAÑOL**: variables, clases, funciones, comentarios, tokens
 2. **0 sr conflicts**: ni uno. Usar `controlSymbol` si es necesario
 3. **%option case-insensitive** en flex
-4. **Makefiles con -ansi** (C++98) para coincidir con Ejemplo 17
+4. **Case-insensitive REAL en keywords**: añadir `tolower()` en `{IDENTIFIER}` rule de `interpreter.l`
+5. **Keywords compuestos**: `si_no` (else), `hasta_que` (until), `fin_si`, etc. con guión bajo
+6. **Makefiles con -ansi** (C++98) para coincidir con Ejemplo 17
 
 ## Escenario de Examen
 
@@ -62,6 +76,8 @@ bash simulacro.sh fulltest   # setup -> test cada pregunta A/B/C/D
 2. **`?:` precedencia**: `%right '?' ':'` antes de `%left OR`, no entre relacionales
 3. **`$N` cambia**: al añadir `controlSymbol` en `do_while`, los números `$N` se desplazan
 4. **El AST necesita casteo**: `Variable*` → `NumericVariable*` para acceder a `getValue()`
+5. **`hasta` vs `hasta_que`**: No confundir. `hasta` = TO (para), `hasta_que` = UNTIL (repetir)
+6. **`si_no` es un solo token**: Con guión bajo, registrado como keyword → token ELSE
 
 ## Documentación
 

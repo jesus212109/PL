@@ -1,0 +1,22 @@
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 3 --> Parser error
+	syntax error, unexpected AND
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 4 --> Parser error
+	syntax error, unexpected AND
+assignment_node: =
+	x
+	NumberNode: 5
+
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+EmptyStmt 
+EmptyStmt 
+printASTStmt: printAST
+	VariableNode: z (Type: 312)
+
+print: 5
+print:  Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 6 --> Runtime error: incompatible type for 
+	print

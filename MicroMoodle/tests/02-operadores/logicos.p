@@ -1,0 +1,8 @@
+print true and true;
+print true and false;
+print false or true;
+print false or false;
+print not true;
+print not false;
+print (1 < 2) and (2 < 3);
+print (1 < 2) and (2 > 3);

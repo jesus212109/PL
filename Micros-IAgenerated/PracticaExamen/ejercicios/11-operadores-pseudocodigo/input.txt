@@ -1,0 +1,12 @@
+// Asignacion :=
+x := 5;
+x := x + 3;
+
+// Igualdad =
+if (x = 8) { print x; }
+
+// Distinto <>
+if (x <> 10) { print 1; }
+
+// Modulo mod
+if (x mod 3 = 2) { print 2; }

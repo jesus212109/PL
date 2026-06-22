@@ -1,0 +1,14 @@
+printASTStmt: printAST
+	StringNode: ingrese numero
+
+ReadStmt: read
+	x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+printASTStmt: printAST
+	StringNode: fin
+
+print: ingrese numero
+Insert a numeric value --> print: 42
+print: fin

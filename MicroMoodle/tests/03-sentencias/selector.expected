@@ -1,0 +1,11 @@
+assignment_node: =
+	x
+	NumberNode: 2
+
+SwitchStmt
+EmptyStmt 
+printASTStmt: printAST
+	StringNode: fin switch
+
+print: dos
+print: fin switch

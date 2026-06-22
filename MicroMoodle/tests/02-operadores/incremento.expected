@@ -1,0 +1,24 @@
+assignment_node: =
+	x
+	NumberNode: 5
+
+PreIncrementStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+PostIncrementStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+PreIncrementStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+PostIncrementStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+print: 6
+print: 7
+print: 6
+print: 5

@@ -1,0 +1,27 @@
+assignment_node: =
+	x
+	NumberNode: 42
+
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+assignment_node: =
+	x
+	StringNode: ahora soy string
+
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+assignment_node: =
+	x
+	ConstantNode: verdadero (Type: 310)
+
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+print: 42
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 8 --> Runtime error: incompatible type of expression for 
+	Assigment
+print: 42
+print: true

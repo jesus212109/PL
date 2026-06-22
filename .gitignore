@@ -1,0 +1,19 @@
+# Binarios y objetos
+*.exe
+*.o
+
+# Generados por Bison/Flex
+*.tab.c
+*.tab.h
+lex.yy.c
+*.gv
+*.dot
+*.output
+
+# Documentación generada
+html/
+
+# Backups de editors
+*~
+*.bak
+*.swp

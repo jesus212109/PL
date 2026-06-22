@@ -1,0 +1,29 @@
+assignment_node: =
+	x
+	NumberNode: 1
+
+WhileStmt: 
+	LessOrEqualNode: <=
+	VariableNode: x (Type: 312)
+	NumberNode: 5
+	BlockStmt: 
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+assignment_node: =
+	x
+	PlusNode: +
+	VariableNode: x (Type: 312)
+	NumberNode: 1
+
+
+EmptyStmt 
+printASTStmt: printAST
+	StringNode: fin
+
+print: 1
+print: 2
+print: 3
+print: 4
+print: 5
+print: fin

@@ -1,0 +1,14 @@
+assignment_node: =
+	n
+	NumberNode: 5
+
+assignment_node: =
+	fact
+	NumberNode: 1
+
+ForStmt
+EmptyStmt 
+printASTStmt: printAST
+	VariableNode: fact (Type: 312)
+
+print: 120

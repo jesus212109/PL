@@ -1,0 +1,20 @@
+printASTStmt: printAST
+	TernaryNode
+
+printASTStmt: printAST
+	TernaryNode
+
+assignment_node: =
+	x
+	NumberNode: 5
+
+printASTStmt: printAST
+	TernaryNode
+
+printASTStmt: printAST
+	TernaryNode
+
+print: 10
+print: b
+print: igual
+print: si

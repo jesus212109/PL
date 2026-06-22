@@ -1,0 +1,14 @@
+assignment_node: =
+	x
+	NumberNode: 10
+
+CompoundAssignmentStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+CompoundAssignmentStmt: x
+printASTStmt: printAST
+	VariableNode: x (Type: 312)
+
+print: 13
+print: 8

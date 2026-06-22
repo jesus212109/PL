@@ -1,0 +1,7 @@
+x = 5;
+
+if x > 3 then
+    print 10;
+else
+    print 20;
+end_if

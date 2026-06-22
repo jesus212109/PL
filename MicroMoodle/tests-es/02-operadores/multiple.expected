@@ -1,0 +1,14 @@
+assignment_node: =
+	a
+	assignment_node: =
+	b
+	NumberNode: 5
+
+printASTStmt: printAST
+	VariableNode: a (Type: 312)
+
+printASTStmt: printAST
+	VariableNode: b (Type: 312)
+
+print: 5
+print: 5

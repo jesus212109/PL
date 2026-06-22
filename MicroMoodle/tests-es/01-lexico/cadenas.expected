@@ -1,0 +1,20 @@
+printASTStmt: printAST
+	StringNode: hola mundo
+
+printASTStmt: printAST
+	StringNode: 
+
+printASTStmt: printAST
+	StringNode: 123
+
+printASTStmt: printAST
+	StringNode: linea 1
+
+printASTStmt: printAST
+	StringNode: linea 2
+
+print: hola mundo
+print: 
+print: 123
+print: linea 1
+print: linea 2

@@ -1,0 +1,23 @@
+printASTStmt: printAST
+	StringNode: paso 2:
+
+ForStmt
+EmptyStmt 
+printASTStmt: printAST
+	StringNode: paso -1:
+
+ForStmt
+EmptyStmt 
+print: paso 2:
+print: 0
+print: 2
+print: 4
+print: 6
+print: 8
+print: 10
+print: paso -1:
+print: 5
+print: 4
+print: 3
+print: 2
+print: 1

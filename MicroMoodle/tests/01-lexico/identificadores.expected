@@ -1,0 +1,38 @@
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 3 --> Lexical error
+	_
+ Program: /home/jesus/PL/P2/main/interpreter.exe
+ Error line 6 --> Lexical error
+	_
+assignment_node: =
+	a
+	NumberNode: 5
+
+assignment_node: =
+	x1
+	NumberNode: 10
+
+assignment_node: =
+	temp
+	NumberNode: 3
+
+assignment_node: =
+	mi_var
+	NumberNode: 7
+
+assignment_node: =
+	contador123
+	NumberNode: 2
+
+printASTStmt: printAST
+	PlusNode: +
+	PlusNode: +
+	PlusNode: +
+	PlusNode: +
+	VariableNode: a (Type: 312)
+	VariableNode: x1 (Type: 312)
+	VariableNode: temp (Type: 312)
+	VariableNode: mi_var (Type: 312)
+	VariableNode: contador123 (Type: 312)
+
+print: 27

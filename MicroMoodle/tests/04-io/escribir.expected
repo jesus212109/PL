@@ -1,0 +1,22 @@
+printASTStmt: printAST
+	StringNode: hola
+
+printASTStmt: printAST
+	NumberNode: 42
+
+printASTStmt: printAST
+	ConstantNode: true (Type: 310)
+
+printASTStmt: printAST
+	PlusNode: +
+	NumberNode: 3
+	NumberNode: 4
+
+printASTStmt: printAST
+	ConcatenationNode
+
+print: hola
+print: 42
+print: true
+print: 7
+print: valor: 
