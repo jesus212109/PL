@@ -51,6 +51,9 @@ extern int lineNumber; //!< External line counter
 %}
 
 
+/* --- OPTIONS --- */
+%option noyywrap
+
 /*! \name REGULAR DEFINITIONS  */
 
 DIGIT  [0-9] 

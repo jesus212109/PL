@@ -12,7 +12,7 @@ CPP = g++
 CFLAGS = -c -g  -Wall -ansi -O2
 
 # Directive for flex's library
-LFLAGS = -lfl
+LFLAGS = 
 #LFLAGS = -ll
 
 # Objects
