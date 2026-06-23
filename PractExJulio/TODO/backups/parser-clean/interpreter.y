@@ -195,7 +195,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 /* MODIFIED in examples 11, 13 */
-%token <string> VARIABLE UNDEFINED CONSTANT BUILTIN STRING
+%token <string> VARIABLE UNDEFINED CONSTANT BUILTIN STRING /* STRING: infraestructura, el alumno anade la regla en .l */
 
 /* Left associativity */
 

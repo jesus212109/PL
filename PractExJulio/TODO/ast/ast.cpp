@@ -299,6 +299,8 @@ int lp::RelationalOperatorNode::getType()
 		result = BOOL;
 	else if ( (this->_left->getType() == BOOL) and (this->_right->getType() == BOOL))
 		result = BOOL;
+	else if ( (this->_left->getType() == STRING) and (this->_right->getType() == STRING))
+		result = BOOL;
 	else
 		warning("Runtime error: incompatible types for", "Relational Operator");
 
@@ -939,6 +941,14 @@ bool lp::EqualNode::evaluateBool()
 				// 
 				result = (leftBoolean == rightBoolean);
 				break;
+			case STRING:
+				{
+				std::string leftString, rightString;
+				leftString = this->_left->evaluateString();
+				rightString = this->_right->evaluateString();
+				result = (leftString == rightString);
+				}
+				break;
 		  default:
 				warning("Runtime error: incompatible types of parameters for ", 
 								"Equal operator");				
@@ -988,6 +998,14 @@ bool lp::NotEqualNode::evaluateBool()
 
 				// 
 				result = (leftBoolean != rightBoolean);
+				break;
+			case STRING:
+				{
+				std::string leftString, rightString;
+				leftString = this->_left->evaluateString();
+				rightString = this->_right->evaluateString();
+				result = (leftString != rightString);
+				}
 				break;
 		  default:
 				warning("Runtime error: incompatible types of parameters for ", 
