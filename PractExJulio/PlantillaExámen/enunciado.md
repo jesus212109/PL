@@ -194,11 +194,23 @@ NOT                     ← no
 
 ## 6. Tests
 
-Los tests están en `tests/` (34 ficheros `.p` con pseudocódigo en español). Los `.expected` se generan cuando el intérprete funcione.
+Los tests están en `tests/` (9 ficheros `.p` con pseudocódigo en español). Los `.expected` se generan cuando el intérprete funcione.
+
+| Test | Qué cubre |
+|------|-----------|
+| `A_lexico.p` | IDs, case insensitive, números, cadenas, comentarios |
+| `B_basicos.p` | Asignación, aritméticos, unarios, relacionales, lógicos |
+| `B_avanzados.p` | Concatenación `\|\|`, ternario `?:`, asignación compuesta `+:=`/`-:=` |
+| `C_condicionales.p` | `si` simple, compuesto, anidado |
+| `C_bucles.p` | `mientras`, `hacer{}`, `repetir`, `para`, `selector` |
+| `D_io.p` | `escribir`, `leer`, `leer_cadena` (tiene `.input`) |
+| `E_pantalla.p` | `borrar_pantalla`, `lugar` |
+| `F_errores.p` | Errores léxicos, sintácticos, semánticos |
+| `G_integracion.p` | Factorial, cambio tipo, incremento, validación total |
 
 ```bash
-./interpreter.exe tests/A-lexico/A3_numeros.p        # Test individual
-./interpreter.exe tests/D-io/D2_leer.p < tests/D-io/D2_leer.input  # Con entrada
-./tests/generate-expected.sh                           # Generar .expected
-./tests/runner.sh                                      # Ejecutar todos
+./interpreter.exe tests/A_lexico.p                        # Test individual
+./interpreter.exe tests/D_io.p < tests/D_io.input         # Con entrada
+./tests/generate-expected.sh                                # Generar .expected
+./tests/runner.sh                                           # Ejecutar todos
 ```

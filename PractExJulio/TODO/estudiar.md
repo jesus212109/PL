@@ -64,6 +64,12 @@ Nodos que ya existen y no necesitas crear:
 
 ---
 
+## Tests
+
+9 tests en `tests/` cubriendo léxico, operadores, sentencias, I/O, errores e integración. Los `.expected` se generan con `./tests/generate-expected.sh` cuando el intérprete funcione.
+
+---
+
 ## Estructura de ficheros
 
 ```
