@@ -81,7 +81,7 @@ Nodos que ya existen y no necesitas crear:
 ├── interpreter.cpp            ← MODIFICAR (control argumentos)
 ├── error/                     ← Sin cambios
 ├── includes/macros.hpp        ← Sin cambios (CLEAR_SCREEN, PLACE, colores)
-├── tests/                     ← 34 tests de referencia
+├── tests/                     ← 9 tests de referencia
 ├── backups/                   ← restore.sh para estado limpio
 └── enunciado.md               ← Especificación del examen
 ```

@@ -11,18 +11,16 @@ if [ ! -f "$INTERP" ]; then
     exit 1
 fi
 
-for dir in "$ROOT"/*/; do
-    for test in "$dir"/*.p; do
-        [ -f "$test" ] || continue
-        expected="${test%.p}.expected"
-        input_file="${test%.p}.input"
-        echo "Generando: $(basename "$dir")/$(basename "$test" .p)"
-        if [ -f "$input_file" ]; then
-            "$INTERP" "$test" < "$input_file" > "$expected" 2>&1
-        else
-            "$INTERP" "$test" > "$expected" 2>&1
-        fi
-    done
+for test in "$ROOT"/*.p; do
+    [ -f "$test" ] || continue
+    expected="${test%.p}.expected"
+    input_file="${test%.p}.input"
+    echo "Generando: $(basename "$test" .p)"
+    if [ -f "$input_file" ]; then
+        "$INTERP" "$test" < "$input_file" > "$expected" 2>&1
+    else
+        "$INTERP" "$test" > "$expected" 2>&1
+    fi
 done
 
 echo ""
