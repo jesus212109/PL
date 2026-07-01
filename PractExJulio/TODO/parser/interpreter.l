@@ -92,6 +92,41 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 			return COMMA;
 		}
 
+#.*		{ /* comment to end of line */ }
+
+\'([^'\\]|\\.)*\'	{
+			/* String literal with escape sequences */
+			/* Quitamos las comillas exteriores */
+			char* content = yytext + 1;  /* skip opening quote */
+			content[strlen(content) - 1] = '\0';  /* remove closing quote */
+
+			/* Process escape sequences */
+			char* result = (char*)malloc(strlen(content) + 1);
+			char* dst = result;
+			char* src = content;
+			while (*src) {
+				if (*src == '\\') {
+					src++;
+					switch (*src) {
+						case 'n':  *dst = '\n'; break;
+						case 't':  *dst = '\t'; break;
+						case '\\': *dst = '\\'; break;
+						case '\'': *dst = '\''; break;
+						case '0':  *dst = '\0'; break;
+						default:   *dst = *src; break;
+					}
+				} else {
+					*dst = *src;
+				}
+				dst++;
+				src++;
+			}
+			*dst = '\0';
+
+			yylval.string = result;
+			return STRING;
+		}
+
 {NUMBER}  {
 					  /* MODIFIED in example 4 */
 					  /* Conversion of type and sending of the numerical value to the parser */

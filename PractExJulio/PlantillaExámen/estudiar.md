@@ -92,6 +92,124 @@ Nodos que ya existen y no necesitas crear:
 
 ---
 
+## Plan TDD — Implementación orientada a tests
+
+Estrategia: implementar de lo más simple a lo más complejo, verificando cada paso con un test.
+
+### Estado actual (verificado)
+- [x] `make clean && make` → 0 conflictos
+- [x] `C_condicionales.p` → PASA (5/5 prints correctos)
+- [x] `:=` funciona (asignación simple y múltiple)
+- [x] `if/entonces/si_no/fin_si` funciona
+- [x] Strings con `'...'` funcionan (con escapes `\n`, `\t`, `\\`, `\'`)
+- [x] Comentarios `#` funcionan
+
+### Pasos restantes (en orden de prioridad)
+
+#### Paso 1: Operadores lógicos como keywords
+**Test**: `B_basicos.p` (líneas de operadores lógicos)
+**Qué hacer**:
+- Añadir a `interpreter.l`:
+  ```lex
+  "y"  { return AND; }
+  "o"  { return OR; }
+  "no" { return NOT; }
+  ```
+- Verificar: `escribir verdadero y verdadero;` → true
+
+#### Paso 2: `mod` como keyword
+**Test**: `B_basicos.p` (línea `7 mod 3`)
+**Qué hacer**:
+- Añadir a `interpreter.l`:
+  ```lex
+  "mod" { return MODULO; }
+  ```
+- Verificar: `7 mod 3` → 1
+
+#### Paso 3: División entera `//`
+**Test**: `B_basicos.p` (línea `7 // 3`)
+**Qué hacer**:
+- Añadir a `interpreter.l`:
+  ```lex
+  "//" { return DIV_ENTERA; }
+  ```
+- Verificar: `7 // 3` → 2
+
+#### Paso 4: `mientras/hacer/fin_mientras`
+**Test**: `C_bucles.p` (primer bloque)
+**Qué hacer**:
+- Añadir tokens a `.y`: `WHILE`, `HACER`, `FIN_MIENTRAS`
+- Añadir regla:
+  ```bison
+  while: WHILE controlSymbol cond HACER stmtlist FIN_MIENTRAS SEMICOLON
+  ;
+  ```
+- Añadir a `interpreter.l`:
+  ```lex
+  "mientras"    { return WHILE; }
+  "hacer"       { /* HACER no es token, parte de la sintaxis */ }
+  "fin_mientras" { return FIN_MIENTRAS; }
+  ```
+- Verificar: bucle while imprime 1,2,3,4,5
+
+#### Paso 5: `repetir/hasta_que`
+**Test**: `C_bucles.p`
+**Qué hacer**:
+- Similar al while, con `REPETIR` y `HASTA_QUE`
+- AST: `RepeatStmt`
+
+#### Paso 6: `hacer{...}mientras`
+**Test**: `C_bucles.p`
+**Qué hacer**:
+- Usa `HACER` y `MIENTRAS` (ya existen)
+- AST: `DoWhileStmt`
+
+#### Paso 7: `para/desde/hasta/paso/fin_para`
+**Test**: `C_bucles.p`
+**Qué hacer**:
+- AST: `ForStmt` (con paso opcional)
+
+#### Paso 8: `selector/caso/defecto/fin_selector`
+**Test**: `C_bucles.p`
+**Qué hacer**:
+- AST: `SwitchStmt` + `CaseClause`
+
+#### Paso 9: `borrar_pantalla` y `lugar`
+**Test**: `E_pantalla.p`
+**Qué hacer**:
+- Ya están en el AST, solo añadir reglas Bison
+
+#### Paso 10: Operadores avanzados
+**Test**: `B_avanzados.p` (ternario, `++`, `+:=`)
+**Qué hacer**:
+- Añadir tokens: `INCREMENT`, `DECREMENT`, `PLUS_ASSIGN`, `MINUS_ASSIGN`
+- Añadir reglas con precedencia
+
+#### Paso 11: `leer` y `leer_cadena`
+**Test**: `D_io.p`
+**Qué hacer**:
+- Añadir tokens: `LEER`, `LEER_CADENA`
+- Ya están los nodos AST `ReadStmt` y `ReadStringStmt`
+- Añadir keywords a `init.hpp`
+
+#### Paso 12: Cambio de tipo dinámico
+**Test**: `G_integracion.p` (cambio_tipo)
+**Qué hacer**:
+- El AST ya soporta cambio de tipo en `AssignmentStmt::evaluate()`
+
+### Resumen de archivos a tocar por paso
+
+| Paso | Archivos |
+|------|----------|
+| 1-3 | `interpreter.l` (1 línea cada uno) |
+| 4-8 | `interpreter.y` + `interpreter.l` + `init.hpp` + `ast/ast.hpp` + `ast/ast.cpp` |
+| 9 | `interpreter.y` + `interpreter.l` + `init.hpp` |
+| 10 | `interpreter.l` + `interpreter.y` + `ast/` |
+| 11 | `interpreter.y` + `interpreter.l` + `init.hpp` |
+| 12 | Nada (ya implementado en AST) |
+
+---
+
 ## Restaurar estado limpio
 
 ```bash
