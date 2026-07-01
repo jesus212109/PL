@@ -59,11 +59,9 @@ DIGIT  [0-9]
 
 LETTER [a-zA-Z]
 
-NUMBER1 {DIGIT}+\.?
+NUMBER {DIGIT}+(\.{DIGIT}+)?([eE][+-]?{DIGIT}+)?
 
-NUMBER2 {DIGIT}*\.{DIGIT}+
-
-IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 
 /* NEW in example 3 */
 /* STATE  */
@@ -94,7 +92,7 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 			return COMMA;
 		}
 
-{NUMBER1}|{NUMBER2}  {
+{NUMBER}  {
 					  /* MODIFIED in example 4 */
 					  /* Conversion of type and sending of the numerical value to the parser */
 					   yylval.number = atof(yytext); 
@@ -157,18 +155,16 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 "("     { return LPAREN; } 			/* NEW in example 3 */
 ")"	    { return RPAREN; } 			/* NEW in example 3 */
 
-
-
 "%"     { return MODULO; }			/* NEW in example 5 */
 
 "^"	    { return POWER; }			/* NEW in example 5 */
 
-"=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
+":=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
 
 
-"=="	{ return EQUAL; }			/* NEW in example 15 */
+"="	{ return EQUAL; }			/* NEW in example 15 */
 
-"!="	{ return NOT_EQUAL; }		/* NEW in example 15 */
+"<>"	{ return NOT_EQUAL; }		/* NEW in example 15 */
 
 ">="	{ return GREATER_OR_EQUAL; }/* NEW in example 15 */
 

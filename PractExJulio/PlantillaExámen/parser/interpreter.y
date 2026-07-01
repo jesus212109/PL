@@ -220,10 +220,14 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %nonassoc  UNARY
 
+/* Resolver dangling else: THEN tiene menor precedencia que ELSE */
+%nonassoc THEN
+%nonassoc ELSE
+
+
 // Maximum precedence 
 /* MODIFIED in example 5 */
 %right POWER
-
 
 %%
  //! \name Grammar rules
@@ -304,13 +308,13 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// $$ = $1;
 	  }
 	/*  NEW in example 17 */
-	| if 
+	| if SEMICOLON
 	 {
 		// Default action
 		// $$ = $1;
 	 }
 	/*  NEW in example 17 */
-	| while 
+	| while SEMICOLON
 	 {
 		// Default action
 		// $$ = $1;
@@ -340,20 +344,20 @@ controlSymbol:  /* Epsilon rule*/
 
 	/*  NEW in example 17 */
 if:	/* Simple conditional statement */
-	IF controlSymbol cond stmt 
+	IF controlSymbol cond THEN stmt %prec THEN
     {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($3, $4);
+		$$ = new lp::IfStmt($3, $5);
 
 		// To control the interactive mode
 		control--;
 	}
 
 	/* Compound conditional statement */
-	| IF controlSymbol cond stmt  ELSE stmt 
+	| IF controlSymbol cond THEN stmt ELSE stmt
 	 {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($3, $4, $6);
+		$$ = new lp::IfStmt($3, $5, $7);
 
 		// To control the interactive mode
 		control--;

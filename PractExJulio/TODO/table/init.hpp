@@ -40,11 +40,11 @@ static struct {
           std::string name ;
 	      double value;
 	      } numericConstant[] = {
-	                    {"PI",    3.14159265358979323846},
-	                    {"E",     2.71828182845904523536},
-	                    {"GAMMA", 0.57721566490153286060},
-	                    {"DEG",  57.29577951308232087680},
-	                    {"PHI",   1.61803398874989484820},
+	                    {"pi",    3.14159265358979323846},
+	                    {"e",     2.71828182845904523536},
+	                    {"gamma", 0.57721566490153286060},
+	                    {"deg",  57.29577951308232087680},
+	                    {"phi",   1.61803398874989484820},
 	                    {"",      0}
 	                   };
 
@@ -70,11 +70,11 @@ static struct {
           std::string name ;
 	      int token;
 	      } keyword[] = { 
-	                    {"print", PRINT},
-	                    {"read",  READ},
-						{"if",	  IF},   	// NEW in example 17
-						{"else",  ELSE}, 	// NEW in example 17
-						{"while", WHILE},	// NEW in example 17
+	                    {"escribir", PRINT},
+	                    {"leer",  READ},
+						{"si",	  IF},   	// NEW in example 17
+						{"entonces",  ELSE}, 	// NEW in example 17
+						{"mientras", WHILE},	// NEW in example 17
 	                    {"",      0}
 	                   };
 
@@ -86,14 +86,14 @@ static struct {    /* Predefined functions names */
                 std::string name ;
 				lp::TypePointerDoubleFunction_1 function;
               } function_1 [] = {
-	                   {"sin",     sin},
-		               {"cos",     cos},
-		               {"atan",    atan},
+	                   {"seno",     sin},
+		               {"coseno",     cos},
+		               {"arctan",    atan},
 		               {"log",     Log},
 		               {"log10",   Log10},
 		               {"exp",     Exp},
-		               {"sqrt",    Sqrt},
-		               {"integer", integer},
+		               {"raiz",    Sqrt},
+		               {"parte_entera", integer},
 		               {"abs",     fabs},   
 		               {"",       0}
 		              };
@@ -103,7 +103,7 @@ static struct {
                 std::string name ;
 				lp::TypePointerDoubleFunction_0 function;
               } function_0 [] = {
-						{"random", Random},
+						{"azar", Random},
 		                {"",       0}
 		              };
 
@@ -114,7 +114,7 @@ static struct {    /* Nombres predefinidos de funciones con 2 argumentos */
                 std::string name ;
 				lp::TypePointerDoubleFunction_2 function;
               } function_2 [] = {
-	                   {"atan2",   Atan2},
+	                   {"arctan2",   Atan2},
 		               {"",       0}
 		              };
 

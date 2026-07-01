@@ -114,10 +114,12 @@ int main(int argc, char *argv[])
      yyin = fopen(argv[1],"r");
 
 	 interactiveMode = false;
- }
-else
+ }else if(argc == 1)
  {
 	interactiveMode = true;
+ }else {
+  printf("ERROR, la entrada debe ser \"%s fichero\" o unicamente \"%s\" para modo interactivo\n\n", argv[0], argv[0]);
+  return -1;
  }
 
  // Copy the name of the interpreter 
