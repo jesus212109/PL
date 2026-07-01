@@ -73,7 +73,9 @@ static struct {
 	                    {"escribir", PRINT},
 	                    {"leer",  READ},
 						{"si",	  IF},   	// NEW in example 17
-						{"entonces",  ELSE}, 	// NEW in example 17
+						{"entonces", THEN},
+						{"si_no",  ELSE}, 	// NEW in example 17
+						{"fin_si", END_IF},
 						{"mientras", WHILE},	// NEW in example 17
 	                    {"",      0}
 	                   };

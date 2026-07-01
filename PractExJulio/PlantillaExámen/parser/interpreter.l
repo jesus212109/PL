@@ -180,6 +180,12 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 
 "&&"	{ return AND; }				/* NEW in example 15 */
 
+"si"         { return IF; }
+"entonces"   { return THEN; }
+"si_no"      { return ELSE; }
+"fin_si"     { return END_IF; }
+"mientras"   { return WHILE; }
+
 "{"		{ return LETFCURLYBRACKET; } 	/* NEW in example 17 */
 
 "}"		{ return RIGHTCURLYBRACKET; }	/* NEW in example 17 */

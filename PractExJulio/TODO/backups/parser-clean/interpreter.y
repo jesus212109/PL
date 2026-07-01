@@ -173,7 +173,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 /* NEW in example 17: IF, ELSE, WHILE */
-%token PRINT READ IF ELSE WHILE 
+%token PRINT READ IF THEN ELSE END_IF WHILE 
 
 /* NEW in example 17 */
 %token LETFCURLYBRACKET RIGHTCURLYBRACKET
@@ -344,20 +344,20 @@ controlSymbol:  /* Epsilon rule*/
 
 	/*  NEW in example 17 */
 if:	/* Simple conditional statement */
-	IF controlSymbol cond THEN stmt %prec THEN
+	IF controlSymbol cond THEN stmtlist END_IF %prec THEN
     {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($3, $5);
+		$$ = new lp::IfStmt($3, new lp::BlockStmt($5) );
 
 		// To control the interactive mode
 		control--;
 	}
 
 	/* Compound conditional statement */
-	| IF controlSymbol cond THEN stmt ELSE stmt
+	| IF controlSymbol cond THEN stmtlist ELSE stmtlist END_IF
 	 {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($3, $5, $7);
+		$$ = new lp::IfStmt($3, new lp::BlockStmt($5), new lp::BlockStmt($7) );
 
 		// To control the interactive mode
 		control--;
