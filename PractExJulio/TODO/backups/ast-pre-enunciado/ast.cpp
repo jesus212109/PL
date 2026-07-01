@@ -107,9 +107,19 @@ bool lp::VariableNode::evaluateBool()
 		// Copy the value of the LogicalVariable
 		result = var->getValue();
 	}
+	else
+	{
+		warning("Runtime error in evaluateBool(): the variable is not boolean",
+				   this->_id);
+	}
 
-std::string lp::VariableNode::evaluateString() 
-{ 
+	// Return the value of the LogicalVariable
+	return result;
+}
+
+
+std::string lp::VariableNode::evaluateString()
+{
 	std::string result = "";
 
 	if (this->getType() == STRING)
@@ -122,20 +132,10 @@ std::string lp::VariableNode::evaluateString()
 	}
 	else
 	{
-		warning("Runtime error in evaluateString(): the variable is not string", 
+		warning("Runtime error in evaluateString(): the variable is not string",
 				   this->_id);
 	}
 
-	return result;
-}
-
-	else
-	{
-		warning("Runtime error in evaluateBool(): the variable is not boolean",
-				   this->_id);
-	}
-
-	// Return the value of the LogicalVariable
 	return result;
 }
 
@@ -219,13 +219,19 @@ void lp::NumberNode::printAST()
   std::cout << "NumberNode: " << this->_number << std::endl;
 }
 
-do
+double lp::NumberNode::evaluateNumber() 
+{ 
+    return this->_number; 
+}
+
+
 std::string lp::NumberNode::evaluateString()
 {
     char buffer[32];
     sprintf(buffer, "%g", this->_number);
     return std::string(buffer);
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,13 +290,6 @@ void lp::ConcatNode::printAST()
 std::string lp::ConcatNode::evaluateString()
 {
     return this->_left->evaluateString() + this->_right->evaluateString();
-}
-
-
-
-uble lp::NumberNode::evaluateNumber() 
-{ 
-    return this->_number; 
 }
 
 
@@ -938,17 +937,25 @@ bool lp::EqualNode::evaluateBool()
 				leftBoolean = this->_left->evaluateBool();
 				rightBoolean = this->_right->evaluateBool();
 
-				// 
+				//
 				result = (leftBoolean == rightBoolean);
 				break;
+			case STRING:
+				{
+				std::string leftString, rightString;
+				leftString = this->_left->evaluateString();
+				rightString = this->_right->evaluateString();
+				result = (leftString == rightString);
+				}
+				break;
 		  default:
-				warning("Runtime error: incompatible types of parameters for ", 
-								"Equal operator");				
+				warning("Runtime error: incompatible types of parameters for ",
+								"Equal operator");
 		}
 	}
 	else
 	{
-		warning("Runtime error: incompatible types of parameters for ", 
+		warning("Runtime error: incompatible types of parameters for ",
 						"Equal operator");
 	}
 
@@ -988,12 +995,20 @@ bool lp::NotEqualNode::evaluateBool()
 				leftBoolean = this->_left->evaluateBool();
 				rightBoolean = this->_right->evaluateBool();
 
-				// 
+				//
 				result = (leftBoolean != rightBoolean);
 				break;
+			case STRING:
+				{
+				std::string leftString, rightString;
+				leftString = this->_left->evaluateString();
+				rightString = this->_right->evaluateString();
+				result = (leftString != rightString);
+				}
+				break;
 		  default:
-				warning("Runtime error: incompatible types of parameters for ", 
-								"Not Equal operator");				
+				warning("Runtime error: incompatible types of parameters for ",
+								"Not Equal operator");
 		}
 	}
 	else
@@ -1222,7 +1237,6 @@ void lp::AssignmentStmt::evaluate()
 			}
 			break;
 
-
 			default:
 				warning("Runtime error: incompatible type of expression for ", "Assigment");
 		}
@@ -1347,7 +1361,6 @@ void lp::PrintStmt::evaluate()
 		case STRING:
 			std::cout << this->_exp->evaluateString() << std::endl;
 			break;
-
 
 
 		default:
@@ -1488,28 +1501,6 @@ void lp::WhileStmt::evaluate()
 
 }
 
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
-
-void lp::BlockStmt::printAST() 
-{
-  std::list<Statement *>::iterator stmtIter;
-
-  std::cout << "BlockStmt: "  << std::endl;
-
-  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++) 
-  {
-     (*stmtIter)->printAST();
-  }
-}
-
-
-vo
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1517,6 +1508,7 @@ vo
 void lp::ReadStringStmt::printAST()
 {
 }
+
 
 void lp::ReadStringStmt::evaluate()
 {
@@ -1529,6 +1521,7 @@ void lp::ReadStringStmt::evaluate()
 void lp::ClearScreenStmt::printAST()
 {
 }
+
 
 void lp::ClearScreenStmt::evaluate()
 {
@@ -1554,7 +1547,28 @@ void lp::PlaceStmt::evaluate()
 {
 }
 
-id lp::BlockStmt::evaluate() 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+// NEW in example 17
+
+void lp::BlockStmt::printAST() 
+{
+  std::list<Statement *>::iterator stmtIter;
+
+  std::cout << "BlockStmt: "  << std::endl;
+
+  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++) 
+  {
+     (*stmtIter)->printAST();
+  }
+}
+
+
+void lp::BlockStmt::evaluate() 
 {
   std::list<Statement *>::iterator stmtIter;
 

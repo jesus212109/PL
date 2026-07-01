@@ -7,8 +7,11 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 TODO_DIR=$(dirname "$SCRIPT_DIR")
 
 echo "Restaurando al estado pre-enunciado (nada implementado)..."
+rm -rf "$TODO_DIR/parser"
 cp -r "$SCRIPT_DIR/parser-pre-enunciado" "$TODO_DIR/parser"
+rm -rf "$TODO_DIR/table"
 cp -r "$SCRIPT_DIR/table-pre-enunciado" "$TODO_DIR/table"
+rm -rf "$TODO_DIR/ast"
 cp -r "$SCRIPT_DIR/ast-pre-enunciado" "$TODO_DIR/ast"
 echo "Hecho."
 echo ""
