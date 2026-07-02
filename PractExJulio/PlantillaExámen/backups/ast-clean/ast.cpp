@@ -34,7 +34,6 @@
 #include "../table/builtinParameter0.hpp"
 #include "../table/builtinParameter1.hpp"
 #include "../table/builtinParameter2.hpp"
-
 #include "../table/stringVariable.hpp"
 
 #include "../parser/interpreter.tab.h"
@@ -119,8 +118,8 @@ bool lp::VariableNode::evaluateBool()
 }
 
 
-std::string lp::VariableNode::evaluateString() 
-{ 
+std::string lp::VariableNode::evaluateString()
+{
 	std::string result = "";
 
 	if (this->getType() == STRING)
@@ -133,7 +132,7 @@ std::string lp::VariableNode::evaluateString()
 	}
 	else
 	{
-		warning("Runtime error in evaluateString(): the variable is not string", 
+		warning("Runtime error in evaluateString(): the variable is not string",
 				   this->_id);
 	}
 
@@ -231,6 +230,66 @@ std::string lp::NumberNode::evaluateString()
     char buffer[32];
     sprintf(buffer, "%g", this->_number);
     return std::string(buffer);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+int lp::StringNode::getType()
+{
+	return STRING;
+}
+
+
+void lp::StringNode::printAST()
+{
+    std::cout << "StringNode: " << this->_value << std::endl;
+}
+
+
+std::string lp::StringNode::evaluateString()
+{
+	return this->_value;
+}
+
+
+double lp::StringNode::evaluateNumber()
+{
+	warning("Runtime error: a string cannot be evaluated as number", "");
+    return 0.0;
+}
+
+
+bool lp::StringNode::evaluateBool()
+{
+    warning("Runtime error: a string cannot be evaluated as bool", "");
+    return false;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+int lp::ConcatNode::getType()
+{
+	return STRING;
+}
+
+
+void lp::ConcatNode::printAST()
+{
+    std::cout << "ConcatNode" << std::endl;
+    std::cout << "\t";
+    this->_left->printAST();
+    std::cout << "\t";
+    this->_right->printAST();
+}
+
+
+std::string lp::ConcatNode::evaluateString()
+{
+    return this->_left->evaluateString() + this->_right->evaluateString();
 }
 
 
@@ -591,66 +650,6 @@ double lp::PowerNode::evaluateNumber()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
-int lp::StringNode::getType()
-{
-	return STRING;
-}
-
-
-void lp::StringNode::printAST()
-{
-    std::cout << "StringNode: " << this->_value << std::endl;
-}
-
-
-std::string lp::StringNode::evaluateString()
-{
-	return this->_value;
-}
-
-
-double lp::StringNode::evaluateNumber()
-{
-	warning("Runtime error: a string cannot be evaluated as number", "");
-    return 0.0;
-}
-
-
-bool lp::StringNode::evaluateBool()
-{
-    warning("Runtime error: a string cannot be evaluated as bool", "");
-    return false;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-int lp::ConcatNode::getType()
-{
-	return STRING;
-}
-
-
-void lp::ConcatNode::printAST()
-{
-    std::cout << "ConcatNode" << std::endl;
-    std::cout << "\t";
-    this->_left->printAST();
-    std::cout << "\t";
-    this->_right->printAST();
-}
-
-
-std::string lp::ConcatNode::evaluateString()
-{
-    return this->_left->evaluateString() + this->_right->evaluateString();
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
 int lp::BuiltinFunctionNode_0::getType()
 {
 	return	NUMBER;
@@ -938,7 +937,7 @@ bool lp::EqualNode::evaluateBool()
 				leftBoolean = this->_left->evaluateBool();
 				rightBoolean = this->_right->evaluateBool();
 
-				// 
+				//
 				result = (leftBoolean == rightBoolean);
 				break;
 			case STRING:
@@ -950,13 +949,13 @@ bool lp::EqualNode::evaluateBool()
 				}
 				break;
 		  default:
-				warning("Runtime error: incompatible types of parameters for ", 
-								"Equal operator");				
+				warning("Runtime error: incompatible types of parameters for ",
+								"Equal operator");
 		}
 	}
 	else
 	{
-		warning("Runtime error: incompatible types of parameters for ", 
+		warning("Runtime error: incompatible types of parameters for ",
 						"Equal operator");
 	}
 
@@ -996,7 +995,7 @@ bool lp::NotEqualNode::evaluateBool()
 				leftBoolean = this->_left->evaluateBool();
 				rightBoolean = this->_right->evaluateBool();
 
-				// 
+				//
 				result = (leftBoolean != rightBoolean);
 				break;
 			case STRING:
@@ -1008,8 +1007,8 @@ bool lp::NotEqualNode::evaluateBool()
 				}
 				break;
 		  default:
-				warning("Runtime error: incompatible types of parameters for ", 
-								"Not Equal operator");				
+				warning("Runtime error: incompatible types of parameters for ",
+								"Not Equal operator");
 		}
 	}
 	else
@@ -1221,27 +1220,18 @@ void lp::AssignmentStmt::evaluate()
 			case STRING:
 			{
 				std::string value;
-				// evaluate the expression as STRING
-			 	value = this->_exp->evaluateString();
+				value = this->_exp->evaluateString();
 
 				if (firstVar->getType() == STRING)
 				{
-					// Get the identifier in the table of symbols as StringVariable
 					lp::StringVariable *v = (lp::StringVariable *) table.getSymbol(this->_id);
-
-					// Assignment the value to the identifier in the table of symbols
 					v->setValue(value);
 				}
-				// The type of variable is not STRING
 				else
 				{
-					// Delete the variable from the table of symbols
 					table.eraseSymbol(this->_id);
-
-					// Insert the variable in the table of symbols as StringVariable
-					// with the type STRING and the value
 					lp::StringVariable *v = new lp::StringVariable(this->_id,
-											VARIABLE,STRING,value);
+												VARIABLE,STRING,value);
 					table.installSymbol(v);
 				}
 			}
@@ -1331,24 +1321,6 @@ void lp::AssignmentStmt::evaluate()
 			}
 			break;
 
-			case STRING:
-			{
-				lp::StringVariable *secondVar = (lp::StringVariable *) table.getSymbol(this->_asgn->_id);
-				if (firstVar->getType() == STRING)
-				{
-					lp::StringVariable *firstVar = (lp::StringVariable *) table.getSymbol(this->_id);
-					firstVar->setValue(secondVar->getValue());
-				}
-				else
-				{
-					table.eraseSymbol(this->_id);
-					lp::StringVariable *firstVar = new lp::StringVariable(this->_id,
-											VARIABLE,STRING,secondVar->getValue());
-					table.installSymbol(firstVar);
-				}
-			}
-			break;
-
 			default:
 				warning("Runtime error: incompatible type of expression for ", "Assigment");
 		}
@@ -1386,10 +1358,10 @@ void lp::PrintStmt::evaluate()
 				std::cout << "false" << std::endl;
 		
 			break;
-
 		case STRING:
 			std::cout << this->_exp->evaluateString() << std::endl;
 			break;
+
 
 		default:
 			warning("Runtime error: incompatible type for ", "print");
@@ -1441,44 +1413,6 @@ void lp::ReadStmt::evaluate()
 									  VARIABLE,NUMBER,value);
 
 		table.installSymbol(n);
-	}
-}
-
-
-// AÑADIDO PARA EXAMEN
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-void lp::ReadStringStmt::printAST()
-{
-  std::cout << "ReadStringStmt: leer_cadena"  << std::endl;
-  std::cout << "\t";
-  std::cout << this->_id;
-  std::cout << std::endl;
-}
-
-
-void lp::ReadStringStmt::evaluate()
-{
-	std::string value;
-	std::cout << BIYELLOW;
-	std::cout << "Insert a string value --> " ;
-	std::cout << RESET;
-	std::getline(std::cin >> std::ws, value);
-
-	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
-
-	if (var->getType() == STRING)
-	{
-		lp::StringVariable *s = (lp::StringVariable *) table.getSymbol(this->_id);
-		s->setValue(value);
-	}
-	else
-	{
-		table.eraseSymbol(this->_id);
-		lp::StringVariable *s = new lp::StringVariable(this->_id,
-									  VARIABLE,STRING,value);
-		table.installSymbol(s);
 	}
 }
 
@@ -1568,25 +1502,199 @@ void lp::WhileStmt::evaluate()
 }
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+void lp::DoWhileStmt::printAST() 
+{
+  std::cout << "DoWhileStmt: "  << std::endl;
+  // Condition
+  std::cout << "\t";
+  this->_cond->printAST();
+
+  // Body of the while loop
+  std::cout << "\t";
+  this->_stmt->printAST();
+
+  std::cout << std::endl;
+}
+
+
+void lp::DoWhileStmt::evaluate() 
+{
+  // DoWhile the condition is true. the body is run 
+  do{
+	this->_stmt->evaluate();
+  }while (this->_cond->evaluateBool() == true);
+
+}
+
+
+
+
+
+
+void lp::RepeatUntil::printAST() 
+{
+  std::cout << "RepeatUntil: "  << std::endl;
+  // Condition
+  std::cout << "\t";
+  this->_cond->printAST();
+
+  // Body of the RepeatUntil loop
+  std::cout << "\t";
+  this->_stmt->printAST();
+
+  std::cout << std::endl;
+}
+
+
+void lp::RepeatUntil::evaluate() 
+{
+  // DoWhile the condition is true. the body is run 
+  do{
+	this->_stmt->evaluate();
+  }while (this->_cond->evaluateBool() != true);
+
+}
+
+
+
+
+
+
+
+lp::ForStmt::ForStmt(std::string var, ExpNode *from, ExpNode *to, BlockStmt *body) {
+    this->_var = var;
+    this->_from = from;
+    this->_to = to;
+    this->_body = body;
+    this->_step = NULL;
+}
+
+lp::ForStmt::ForStmt(std::string var, ExpNode *from, ExpNode *to, BlockStmt *body, ExpNode *step) {
+    this->_var = var;
+    this->_from = from;
+    this->_to = to;
+    this->_body = body;
+    this->_step = step;
+}
+
+void lp::ForStmt::printAST() {
+    std::cout << "ForStmt: " << this->_var << std::endl;
+    // ...
+}
+
+void lp::ForStmt::evaluate() {
+    // Crear o actualizar la variable de control
+    lp::NumericVariable *var = new lp::NumericVariable(this->_var, VARIABLE, NUMBER, 0.0);
+    table.installSymbol(var);
+    
+    double from = this->_from->evaluateNumber();
+    double to = this->_to->evaluateNumber();
+    double step = (this->_step != NULL) ? this->_step->evaluateNumber() : 1.0;
+    
+    if (step == 0) {
+        warning("Runtime error: paso cero en bucle para", "");
+        return;
+    }
+    
+    if (step > 0) {
+        for (double i = from; i <= to; i += step) {
+            var->setValue(i);
+            this->_body->evaluate();
+        }
+    } else {
+        for (double i = from; i >= to; i += step) {
+            var->setValue(i);
+            this->_body->evaluate();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+lp::SwitchStmt::SwitchStmt(ExpNode *switchExp) {
+    this->_switchExp = switchExp;
+    this->_default = NULL;
+}
+
+void lp::SwitchStmt::addCase(ExpNode *value, BlockStmt *body) {
+    CaseClause c;
+    c.value = value;
+    c.body = body;
+    this->_cases.push_back(c);
+}
+
+void lp::SwitchStmt::setDefault(BlockStmt *body) {
+    this->_default = body;
+}
+
+void lp::SwitchStmt::evaluate() {
+    double value = this->_switchExp->evaluateNumber();
+    bool matched = false;
+
+    std::list<CaseClause>::iterator it;
+    for (it = this->_cases.begin(); it != this->_cases.end(); it++) {
+        if (it->value->evaluateNumber() == value) {
+            it->body->evaluate();
+            matched = true;
+            break;
+        }
+    }
+    
+    if (!matched && this->_default != NULL) {
+        this->_default->evaluate();
+    }
+}
+
+
+void lp::SwitchStmt::printAST() {
+    // Stub - not used
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+// AÑADIDO PARA EXAMEN
+void lp::ReadStringStmt::printAST()
+{
+}
+
+
+void lp::ReadStringStmt::evaluate()
+{
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 void lp::ClearScreenStmt::printAST()
 {
-    std::cout << "ClearScreenStmt: borrar_pantalla"  << std::endl;
 }
 
 
 void lp::ClearScreenStmt::evaluate()
 {
-    std::cout << CLEAR_SCREEN;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 lp::PlaceStmt::PlaceStmt(ExpNode *row, ExpNode *col)
 {
@@ -1597,19 +1705,13 @@ lp::PlaceStmt::PlaceStmt(ExpNode *row, ExpNode *col)
 
 void lp::PlaceStmt::printAST()
 {
-    std::cout << "PlaceStmt: lugar"  << std::endl;
-    std::cout << "\t";
-    this->_row->printAST();
-    std::cout << "\t";
-    this->_col->printAST();
-    std::cout << std::endl;
 }
 
 
 void lp::PlaceStmt::evaluate()
 {
-    // El posicionamiento de cursor se puede implementar aqui si se desea
 }
+
 
 
 

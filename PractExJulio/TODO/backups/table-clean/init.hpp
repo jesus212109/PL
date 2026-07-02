@@ -20,6 +20,7 @@
 
 //  interpreter.tab.h contains the number values of the tokens produced by the parser
 #include "../parser/interpreter.tab.h"
+///////////////////////////////////////
 
 ///////////////////////////////////////
 // NEW in example 13
@@ -73,10 +74,20 @@ static struct {
 	                    {"escribir", PRINT},
 	                    {"leer",  READ},
 						{"si",	  IF},   	// NEW in example 17
-						{"entonces", THEN},
+						{"entonces",	  THEN},
 						{"si_no",  ELSE}, 	// NEW in example 17
-						{"fin_si", END_IF},
+						{"fin_si",	  END_IF},
 						{"mientras", WHILE},	// NEW in example 17
+						{"hacer", DO},
+						{"fin_mientras", END_WHILE},
+						{"repetir", REPEAT},
+						{"hasta_que", UNTIL},
+						{"para", PARA},
+						
+						{"desde", DESDE},
+						{"hasta", HASTA},
+						{"paso", PASO},
+						{"fin_para", FIN_PARA},
 	                    {"",      0}
 	                   };
 
@@ -119,7 +130,6 @@ static struct {    /* Nombres predefinidos de funciones con 2 argumentos */
 	                   {"arctan2",   Atan2},
 		               {"",       0}
 		              };
-
 
 
 

@@ -50,6 +50,9 @@ extern int lineNumber; //!< External line counter
 
 %}
 
+
+/* Compatibilidad con flex 2.6.4+ (sustituye a -lfl) */
+%option case-insensitive
 %option noyywrap
 
 
@@ -63,6 +66,8 @@ NUMBER {DIGIT}+(\.{DIGIT}+)?([eE][+-]?{DIGIT}+)?
 
 IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 
+STRING_LIT  \'([^'\\]|\\.)*\'
+
 /* NEW in example 3 */
 /* STATE  */
 %x ERROR
@@ -71,6 +76,8 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 %%
 
 [ \t] 	{ ; }    /* skip white space and tabular */
+
+#.+  { ; }  
 
 \n      { 
 			/* Line counter */
@@ -92,42 +99,7 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 			return COMMA;
 		}
 
-#.*		{ /* comment to end of line */ }
-
-\'([^'\\]|\\.)*\'	{
-			/* String literal with escape sequences */
-			/* Quitamos las comillas exteriores */
-			char* content = yytext + 1;  /* skip opening quote */
-			content[strlen(content) - 1] = '\0';  /* remove closing quote */
-
-			/* Process escape sequences */
-			char* result = (char*)malloc(strlen(content) + 1);
-			char* dst = result;
-			char* src = content;
-			while (*src) {
-				if (*src == '\\') {
-					src++;
-					switch (*src) {
-						case 'n':  *dst = '\n'; break;
-						case 't':  *dst = '\t'; break;
-						case '\\': *dst = '\\'; break;
-						case '\'': *dst = '\''; break;
-						case '0':  *dst = '\0'; break;
-						default:   *dst = *src; break;
-					}
-				} else {
-					*dst = *src;
-				}
-				dst++;
-				src++;
-			}
-			*dst = '\0';
-
-			yylval.string = result;
-			return STRING;
-		}
-
-{NUMBER}  {
+{NUMBER}	{
 					  /* MODIFIED in example 4 */
 					  /* Conversion of type and sending of the numerical value to the parser */
 					   yylval.number = atof(yytext); 
@@ -139,6 +111,10 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 {IDENTIFIER}   		 {
 						 /* NEW in example 7 */
 						 std::string identifier(yytext);
+
+						for(int i=0; i<yyleng; i++){
+							yytext[i] = tolower(yytext[i]);
+						}
 
 						/* 
                           strdup() function returns a pointer to a new string 
@@ -181,6 +157,36 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 							}
                      }
 
+{STRING_LIT}    {
+    /* Quitamos las comillas exteriores */
+    yytext[yyleng-1] = '\0';       /* quitar comilla final */
+    char* content = yytext + 1;    /* saltar comilla inicial */
+    char* result  = (char*)malloc(strlen(content) + 1);
+    char* dest    = result;
+    char* src     = content;
+
+    while (*src) {
+        if (*src == '\\') {
+            src++;
+            switch (*src) {
+                case 'n':  *dest = '\n'; break;
+                case 't':  *dest = '\t'; break;
+                case '\\': *dest = '\\'; break;
+                case '\'': *dest = '\''; break;
+                case '0':  *dest = '\0'; break;
+                default:   *dest = *src; break;
+            }
+        } else {
+            *dest = *src;
+        }
+        dest++; src++;
+    }
+    *dest = '\0';
+
+    yylval.string = result;
+    return STRING;
+}
+
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
 
@@ -189,6 +195,8 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 
 "("     { return LPAREN; } 			/* NEW in example 3 */
 ")"	    { return RPAREN; } 			/* NEW in example 3 */
+
+
 
 "%"     { return MODULO; }			/* NEW in example 5 */
 
@@ -211,19 +219,11 @@ IDENTIFIER  {LETTER}(_?({LETTER}|{DIGIT})+)*
 
 "!"		{ return NOT; }				/* NEW in example 15 */
 
-"||"	{ return OR; }				/* NEW in example 15 */
-
-"&&"	{ return AND; }				/* NEW in example 15 */
-
-"si"         { return IF; }
-"entonces"   { return THEN; }
-"si_no"      { return ELSE; }
-"fin_si"     { return END_IF; }
-"mientras"   { return WHILE; }
-
 "{"		{ return LETFCURLYBRACKET; } 	/* NEW in example 17 */
 
 "}"		{ return RIGHTCURLYBRACKET; }	/* NEW in example 17 */
+
+"||"    {return CONCAT; }
 
 
 <<EOF>> { /* The interpreter finishes when finds the end of file character */

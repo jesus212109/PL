@@ -69,10 +69,12 @@ namespace lp
 		return false;
 	}
 
+
 	/*!	
-		\brief   Evaluate the expression as STRING
+		rief   Evaluate the expression as STRING
 		\warning Virtual function: could be redefined in the heir classes
-		\return  std::string
+		
+eturn  std::string
 		\sa		   getType, printAST, evaluateNumber, evaluateBool
 	*/
     virtual std::string evaluateString()
@@ -137,9 +139,11 @@ class VariableNode : public ExpNode
 	*/
 	  bool evaluateBool();
 
+
 	/*!	
-		\brief   Evaluate the Variable as STRING
-		\return  std::string
+		rief   Evaluate the Variable as STRING
+		
+eturn  std::string
 		\sa		   getType, printAST, evaluateNumber, evaluateBool
 	*/
 	  std::string evaluateString();
@@ -251,23 +255,18 @@ class NumberNode : public ExpNode
 	*/
 	double evaluateNumber();
 
-	/*!	
-		\brief   Evaluate the expression as STRING
-		\return  std::string
-		\sa		   getType, printAST, evaluateNumber
-	*/
 	  std::string evaluateString();
+
 };
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!	
   \class   StringNode
-  \brief   Definition of atributes and methods of StringNode class
-  \note    StringNode Class publicly inherits from ExpNode class
+  rief   Definition of atributes and methods of StringNode class
+  
+ote    StringNode Class publicly inherits from ExpNode class
 */
 class StringNode : public ExpNode 
 {
@@ -277,10 +276,11 @@ class StringNode : public ExpNode
  public:
 
 /*!		
-	\brief Constructor of StringNode
+	rief Constructor of StringNode
 	\param value: std::string
 	\post  A new StringNode is created with the value of the parameter
-	\note  Inline function
+	
+ote  Inline function
 */
   StringNode(std::string const & value)
 	{
@@ -288,35 +288,40 @@ class StringNode : public ExpNode
 	}
 
 	/*!	
-	\brief   Get the type of the expression: STRING
-	\return  int
+	rief   Get the type of the expression: STRING
+	
+eturn  int
 	\sa		   printAST, evaluateString
 	*/
 	int getType();
 
 	/*!
-		\brief   Print the AST for expression
-		\return  void
+		rief   Print the AST for expression
+		
+eturn  void
 		\sa		   getType, evaluateString
 	*/
 	void printAST();
 
 	/*!	
-		\brief   Evaluate the expression as STRING
-		\return  std::string
+		rief   Evaluate the expression as STRING
+		
+eturn  std::string
 		\sa		   getType, printAST
 	*/
 	  std::string evaluateString();
 
 	/*!	
-		\brief   Evaluate the expression as NUMBER (error)
-		\return  double
+		rief   Evaluate the expression as NUMBER (error)
+		
+eturn  double
 	*/
 	  double evaluateNumber();
 
 	/*!	
-		\brief   Evaluate the expression as BOOL (error)
-		\return  bool
+		rief   Evaluate the expression as BOOL (error)
+		
+eturn  bool
 	*/
 	  bool evaluateBool();
 };
@@ -327,8 +332,9 @@ class StringNode : public ExpNode
 
 /*!	
   \class   ConcatNode
-  \brief   Definition of atributes and methods of ConcatNode class
-  \note    ConcatNode Class publicly inherits from ExpNode class
+  rief   Definition of atributes and methods of ConcatNode class
+  
+ote    ConcatNode Class publicly inherits from ExpNode class
 */
 class ConcatNode : public ExpNode
 {
@@ -339,7 +345,7 @@ class ConcatNode : public ExpNode
   public:
 
 /*!		
-	\brief Constructor of ConcatNode
+	rief Constructor of ConcatNode
 	\param L: pointer to ExpNode (left operand)
 	\param R: pointer to ExpNode (right operand)
 	\post  A new ConcatNode is created with the parameters
@@ -351,26 +357,33 @@ class ConcatNode : public ExpNode
     }
 
 	/*!	
-		\brief   Get the type of the expression: STRING
-		\return  int
+		rief   Get the type of the expression: STRING
+		
+eturn  int
 		\sa		   printAST, evaluateString
 	*/
     int getType();
 
 	/*!
-		\brief   Print the AST for expression
-		\return  void
+		rief   Print the AST for expression
+		
+eturn  void
 		\sa		   getType, evaluateString
 	*/
     void printAST();
 
 	/*!	
-		\brief   Evaluate the expression as STRING
-		\return  std::string
+		rief   Evaluate the expression as STRING
+		
+eturn  std::string
 		\sa		   getType, printAST
 	*/
     std::string evaluateString();
 };
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -950,6 +963,10 @@ class BuiltinFunctionNode : public ExpNode
 	}
 
 };
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1308,7 +1325,7 @@ class EqualNode : public RelationalOperatorNode
 	\return  bool
 	\sa		  printAST
 */
-  bool evaluateBool();
+  bool evaluateBool();;
 };
 
 
@@ -1412,10 +1429,10 @@ class OrNode : public LogicalOperatorNode
   public:
 
 /*!		
-	\brief Constructor of OrNode uses LogicalOperatorNode's constructor as members initializer
+	\brief Constructor of AndNode uses LogicalOperatorNode's constructor as members initializer
 	\param L: pointer to ExpNode
 	\param R: pointer to ExpNode
-	\post  A new OrNode is created with the parameter
+	\post  A new AndNode is created with the parameter
 */
   OrNode(ExpNode *L, ExpNode *R): LogicalOperatorNode(L,R) 
   {
@@ -1653,18 +1670,15 @@ class ReadStmt : public Statement
 */
   void evaluate();
 };
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // AÑADIDO PARA EXAMEN
 /*!	
   \class   ReadStringStmt
-  \brief   Definition of atributes and methods of ReadStringStmt class
-  \note    ReadStringStmt Class publicly inherits from Statement class
-		   and adds its own printAST and evaluate functions
-  \warning Clase anadida para el examen, no forma parte del nucleo a implementar
+  rief   Definition of atributes and methods of ReadStringStmt class
+  
+ote    ReadStringStmt Class publicly inherits from Statement class
 */
 class ReadStringStmt : public Statement
 {
@@ -1674,7 +1688,7 @@ class ReadStringStmt : public Statement
   public:
 
 /*!		
-	\brief Constructor of ReadStringStmt
+	rief Constructor of ReadStringStmt
 	\param id: string, name of the variable of the ReadStringStmt
 	\post  A new ReadStringStmt is created with the parameter
 */
@@ -1684,19 +1698,24 @@ class ReadStringStmt : public Statement
 	}
 
 /*!
-	\brief   Print the AST for ReadStringStmt
-	\return  void
+	rief   Print the AST for ReadStringStmt
+	
+eturn  void
 	\sa		   evaluate
 */
   void printAST();
 
 /*!	
-	\brief   Evaluate the ReadStringStmt
-	\return  void
+	rief   Evaluate the ReadStringStmt
+	
+eturn  void
 	\sa		   printAST
 */
   void evaluate();
 };
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1850,7 +1869,151 @@ class WhileStmt : public Statement
 	\sa	   	 printAST
 */
   void evaluate();
-};///////////////////////////////////////////////////////////////////////////////////////////////
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
+  \class   DoWhileStmt
+  \brief   Definition of atributes and methods of WhileStmt class
+  \note    WhileStmt Class publicly inherits from Statement class 
+		       and adds its own printAST and evaluate functions
+*/
+class DoWhileStmt : public Statement 
+{
+ private:
+  ExpNode *_cond; //!< Condicion of the while statement
+  Statement *_stmt; //!< Statement of the body of the while loop
+
+  public:
+/*!		
+	\brief Constructor of  WhileStmt
+	\param condition: ExpNode of the condition
+	\param statement: Statement of the body of the loop 
+	\post  A new WhileStmt is created with the parameters
+*/
+  DoWhileStmt(Statement *statement, ExpNode *condition)
+	{
+		this->_cond = condition;
+		this->_stmt = statement;
+	}
+
+
+/*!
+	\brief   Print the AST for WhileStmt
+	\return  void
+	\sa		   evaluate
+*/
+  void printAST();
+
+/*!	
+	\brief   Evaluate the WhileStmt
+	\return  void
+	\sa	   	 printAST
+*/
+  void evaluate();
+};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
+  \class   RepeatUntil
+  \brief   Definition of atributes and methods of RepeatUntil class
+  \note    RepeatUntil Class publicly inherits from Statement class 
+		       and adds its own printAST and evaluate functions
+*/
+class RepeatUntil : public Statement 
+{
+ private:
+  ExpNode *_cond; //!< Condicion of the while statement
+  Statement *_stmt; //!< Statement of the body of the while loop
+
+  public:
+/*!		
+	\brief Constructor of  RepeatUntil
+	\param condition: ExpNode of the condition
+	\param statement: Statement of the body of the loop 
+	\post  A new RepeatUntil is created with the parameters
+*/
+  RepeatUntil(Statement *statement, ExpNode *condition)
+	{
+		this->_cond = condition;
+		this->_stmt = statement;
+	}
+
+
+/*!
+	\brief   Print the AST for WhileStmt
+	\return  void
+	\sa		   evaluate
+*/
+  void printAST();
+
+/*!	
+	\brief   Evaluate the WhileStmt
+	\return  void
+	\sa	   	 printAST
+*/
+  void evaluate();
+};
+
+
+
+
+
+
+class BlockStmt;
+
+class ForStmt : public Statement {
+    std::string _var;
+    ExpNode *_from;
+    ExpNode *_to;
+    ExpNode *_step;
+    BlockStmt *_body;
+public:
+    ForStmt(std::string var, ExpNode *from, ExpNode *to, BlockStmt *body);
+    ForStmt(std::string var, ExpNode *from, ExpNode *to, BlockStmt *body, ExpNode *step);
+    void printAST();
+    void evaluate();
+};
+
+
+
+
+
+
+
+struct CaseClause {
+    ExpNode *value;
+    BlockStmt *body;
+};
+
+class SwitchStmt : public Statement {
+    ExpNode *_switchExp;
+    BlockStmt *_default;
+    std::list<CaseClause> _cases;
+public:
+    SwitchStmt(ExpNode *switchExp);
+    void setSwitchExp(ExpNode *exp);
+    void addCase(ExpNode *value, BlockStmt *body);
+    void setDefault(BlockStmt *body);
+    void printAST();
+    void evaluate();
+};
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // NEW in example 17
 
@@ -1867,7 +2030,7 @@ class BlockStmt : public Statement
 
   public:
 /*!		
-	\brief Constructor of BlockStmt
+	\brief Constructor of  WhileStmt
 	\param stmtList: list of Statement
 	\post  A new BlockStmt is created with the parameters
 */
@@ -1894,20 +2057,19 @@ class BlockStmt : public Statement
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /*!	
   \class   ClearScreenStmt
-  \brief   Definition of atributes and methods of ClearScreenStmt class
-  \note    ClearScreenStmt Class publicly inherits from Statement class
+  rief   Definition of atributes and methods of ClearScreenStmt class
+  
+ote    ClearScreenStmt Class publicly inherits from Statement class
 */
 class ClearScreenStmt : public Statement
 {
  public:
 
 /*!		
-	\brief Constructor of ClearScreenStmt
+	rief Constructor of ClearScreenStmt
 	\post  A new ClearScreenStmt is created
 */
   ClearScreenStmt()
@@ -1916,15 +2078,17 @@ class ClearScreenStmt : public Statement
 	}
 
 /*!
-	\brief   Print the AST for ClearScreenStmt
-	\return  void
+	rief   Print the AST for ClearScreenStmt
+	
+eturn  void
 	\sa		   evaluate
 */
   void printAST();
 
 /*!	
-	\brief   Evaluate the ClearScreenStmt (borrar_pantalla)
-	\return  void
+	rief   Evaluate the ClearScreenStmt (borrar_pantalla)
+	
+eturn  void
 	\sa		   printAST
 */
   void evaluate();
@@ -1937,8 +2101,9 @@ class ClearScreenStmt : public Statement
 
 /*!	
   \class   PlaceStmt
-  \brief   Definition of atributes and methods of PlaceStmt class
-  \note    PlaceStmt Class publicly inherits from Statement class
+  rief   Definition of atributes and methods of PlaceStmt class
+  
+ote    PlaceStmt Class publicly inherits from Statement class
 */
 class PlaceStmt : public Statement
 {
@@ -1949,7 +2114,7 @@ class PlaceStmt : public Statement
  public:
 
 /*!		
-	\brief Constructor of PlaceStmt
+	rief Constructor of PlaceStmt
 	\param row: pointer to ExpNode, row coordinate
 	\param col: pointer to ExpNode, column coordinate
 	\post  A new PlaceStmt is created with the parameters
@@ -1957,15 +2122,17 @@ class PlaceStmt : public Statement
   PlaceStmt(ExpNode *row, ExpNode *col);
 
 /*!
-	\brief   Print the AST for PlaceStmt
-	\return  void
+	rief   Print the AST for PlaceStmt
+	
+eturn  void
 	\sa		   evaluate
 */
   void printAST();
 
 /*!	
-	\brief   Evaluate the PlaceStmt (lugar)
-	\return  void
+	rief   Evaluate the PlaceStmt (lugar)
+	
+eturn  void
 	\sa		   printAST
 */
   void evaluate();
@@ -1973,8 +2140,6 @@ class PlaceStmt : public Statement
 
 
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 

@@ -159,7 +159,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while, block
-%type <st> stmt asgn print read if while block
+%type <st> stmt asgn print read if while do block repeat para
 
 %type <prog> program
 
@@ -173,7 +173,8 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 /* NEW in example 17: IF, ELSE, WHILE */
-%token PRINT READ IF THEN ELSE END_IF WHILE 
+%token PRINT READ IF ELSE THEN END_IF WHILE DO END_WHILE REPEAT UNTIL
+%token PARA DESDE HASTA HACER FIN_PARA PASO
 
 /* NEW in example 17 */
 %token LETFCURLYBRACKET RIGHTCURLYBRACKET
@@ -182,7 +183,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %right ASSIGNMENT
 
 /* NEW in example 14 */
-%token COMMA
+%token COMMA CONCAT
 
 /*******************************************/
 /* MODIFIED in example 4 */
@@ -195,7 +196,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 /* MODIFIED in examples 11, 13 */
-%token <string> VARIABLE UNDEFINED CONSTANT BUILTIN STRING /* STRING: infraestructura, el alumno anade la regla en .l */
+%token <string> VARIABLE UNDEFINED CONSTANT BUILTIN STRING 
 
 /* Left associativity */
 
@@ -220,15 +221,12 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %nonassoc  UNARY
 
-/* Resolver dangling else: THEN tiene menor precedencia que ELSE */
-%nonassoc THEN
-%nonassoc ELSE
-
-
 // Maximum precedence 
 /* MODIFIED in example 5 */
 %right POWER
 
+%nonassoc THEN
+%nonassoc ELSE
 %%
  //! \name Grammar rules
 
@@ -308,17 +306,30 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// $$ = $1;
 	  }
 	/*  NEW in example 17 */
-	| if SEMICOLON
+	| if 
 	 {
 		// Default action
 		// $$ = $1;
 	 }
 	/*  NEW in example 17 */
-	| while SEMICOLON
+	| while 
 	 {
 		// Default action
 		// $$ = $1;
 	 }
+	| do 
+	 {
+		// Default action
+		// $$ = $1;
+	 }
+	| repeat
+	 {
+		// Default action
+		// $$ = $1;
+	 }
+	| para {
+
+	}
 	/*  NEW in example 17 */
 	| block 
 	 {
@@ -365,17 +376,47 @@ if:	/* Simple conditional statement */
 ;
 
 	/*  NEW in example 17 */
-while:  WHILE controlSymbol cond stmt 
+while:  WHILE controlSymbol cond DO stmtlist END_WHILE
 		{
 			// Create a new while statement node
-			$$ = new lp::WhileStmt($3, $4);
+			$$ = new lp::WhileStmt($3, new lp::BlockStmt($5) );
 
 			// To control the interactive mode
 			control--;
     }
 ;
 
-	/*  NEW in example 17 */
+do:  DO controlSymbol LETFCURLYBRACKET stmtlist RIGHTCURLYBRACKET WHILE cond
+		{
+			// Create a new while statement node
+			$$ = new lp::DoWhileStmt(new lp::BlockStmt($4), $7 );
+
+			// To control the interactive mode
+			control--;
+    }
+;
+
+repeat:  REPEAT controlSymbol  stmtlist  UNTIL cond
+		{
+			// Create a new while statement node
+			$$ = new lp::RepeatUntil(new lp::BlockStmt($3), $5 );
+
+			// To control the interactive mode
+			control--;
+    }
+;
+para:
+    PARA controlSymbol VARIABLE DESDE exp HASTA exp HACER stmtlist FIN_PARA SEMICOLON
+    {
+        $$ = new lp::ForStmt($3, $5, $7, new lp::BlockStmt($9));
+    }
+| PARA controlSymbol VARIABLE DESDE exp HASTA exp PASO exp HACER stmtlist FIN_PARA SEMICOLON
+    {
+        $$ = new lp::ForStmt($3, $5, $7, new lp::BlockStmt($11), $9);
+    }
+;
+
+/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN
 		{ 
 			$$ = $2;
@@ -428,18 +469,17 @@ read:  READ LPAREN VARIABLE RPAREN
 ;
 
 
-exp:	NUMBER
-		{
+exp:	NUMBER 
+		{ 
 			// Create a new number node
 			$$ = new lp::NumberNode($1);
 		}
 
-	| STRING
+	| 	STRING
 		{
 			// Create a new string node
 			$$ = new lp::StringNode($1);
 		}
-
 	| 	exp PLUS exp 
 		{ 
 			// Create a new plus node
